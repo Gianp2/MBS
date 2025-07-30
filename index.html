@@ -45,34 +45,106 @@
     .nav-link:hover::after {
       width: 100%;
     }
-    /* Mobile menu styles */
-    #mobile-menu {
+    /* Hamburger menu styles */
+    .hamburger {
+      position: fixed;
+      background-color: transparent;
+      right: 20px;
+      top: 20px;
+      height: 30px;
+      width: 30px;
+      padding: 20px;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transition: -webkit-transform 0.25s cubic-bezier(0.05, 1.04, 0.72, 0.98);
+      transition: transform 0.25s cubic-bezier(0.05, 1.04, 0.72, 0.98);
+      z-index: 1002;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .hamburger.is-active {
+      background-color: transparent;
+    }
+    ._layer {
+      background: #e5e7eb; /* Tailwind gray-200 */
+      margin-bottom: 4px;
+      border-radius: 2px;
+      width: 28px;
+      height: 4px;
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transition: all 0.25s cubic-bezier(0.05, 1.04, 0.72, 0.98);
+      transition: all 0.25s cubic-bezier(0.05, 1.04, 0.72, 0.98);
+    }
+    .hamburger:hover .-top {
+      -webkit-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+      transform: translateY(-100%);
+    }
+    .hamburger:hover .-bottom {
+      -webkit-transform: translateY(100%);
+      -ms-transform: translateY(100%);
+      transform: translateY(100%);
+    }
+    .hamburger.is-active .-top {
+      -webkit-transform: translateY(200%) rotate(45deg) !important;
+      -ms-transform: translateY(200%) rotate(45deg) !important;
+      transform: translateY(200%) rotate(45deg) !important;
+    }
+    .hamburger.is-active .-mid {
+      opacity: 0;
+    }
+    .hamburger.is-active .-bottom {
+      -webkit-transform: translateY(-200%) rotate(135deg) !important;
+      -ms-transform: translateY(-200%) rotate(135deg) !important;
+      transform: translateY(-200%) rotate(135deg) !important;
+    }
+    .menuppal.is_active {
+      transform: translate3d(0px, 0px, 0px);
+    }
+    .menuppal {
+      background-color: rgba(31, 41, 55, 0.95); /* Tailwind gray-800 with opacity */
+      bottom: 0;
+      height: 100%;
+      left: 0;
+      overflow-y: scroll;
       position: fixed;
       top: 0;
-      right: 0;
-      height: 100vh;
-      width: 75%;
-      max-width: 300px;
-      background-color: rgba(31, 41, 55, 0.95); /* Tailwind gray-800 with opacity */
-      transition: transform 0.3s ease-in-out;
-      transform: translateX(100%);
-      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.3);
-      z-index: 50;
+      transform: translate3d(0px, -100%, 0px);
+      transition: transform 0.35s cubic-bezier(0.05, 1.04, 0.72, 0.98) 0s;
+      width: 100%;
+      z-index: 1001;
     }
-    #mobile-menu.active {
-      transform: translateX(0);
+    .menuppal ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
-    #mobile-menu a {
-      display: block;
-      padding: 0.75rem 1rem;
-      font-size: 1.1rem;
-      font-weight: 500;
+    .menuppal ul li {
+      list-style: none;
       text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      line-height: 3em;
+      height: 3em;
       color: #e5e7eb; /* Tailwind gray-200 */
-      transition: background-color 0.2s ease, color 0.2s ease;
+      text-transform: none;
+      font-weight: bold;
     }
-    #mobile-menu a:hover {
-      background-color: #4b5563; /* Tailwind gray-600 */
+    .menuppal ul li a {
+      text-decoration: none;
+      color: #e5e7eb; /* Tailwind gray-200 */
+    }
+    .menuppal ul li a:hover {
+      text-decoration: none;
       color: #facc15; /* Tailwind yellow-400 */
     }
     /* Floating reserve button for mobile */
@@ -104,6 +176,12 @@
       .floating-reserve-button {
         display: none;
       }
+      .hamburger {
+        display: none;
+      }
+      .menuppal {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -124,17 +202,21 @@
         <a href="#pagos" class="nav-link font-medium font-['Poppins']">Pagos</a>
         <a href="#contacto" class="nav-link font-medium font-['Poppins']">Contacto</a>
       </nav>
-      <button class="md:hidden menu-toggle" aria-label="Abrir menú móvil">
-        <i class="fas fa-bars text-2xl"></i>
-      </button>
+      <div class="hamburger md:hidden" aria-label="Abrir menú móvil">
+        <div class="_layer -top"></div>
+        <div class="_layer -mid"></div>
+        <div class="_layer -bottom"></div>
+      </div>
     </div>
     
-    <nav class="hidden md:hidden flex-col" id="mobile-menu" aria-label="Menú móvil">
-      <a href="#inicio" class="nav-link font-['Poppins']">Inicio</a>
-      <a href="#servicios" class="nav-link font-['Poppins']">Servicios</a>
-      <a href="#turnos" class="nav-link font-['Poppins']">Reserva</a>
-      <a href="#pagos" class="nav-link font-['Poppins']">Pagos</a>
-      <a href="#contacto" class="nav-link font-['Poppins']">Contacto</a>
+    <nav class="menuppal" aria-label="Menú móvil">
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#turnos">Reserva</a></li>
+        <li><a href="#pagos">Pagos</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -317,7 +399,9 @@
 
   <script>
     function copiarAlias() {
-      const alias = document.getElementById('alias-text').textContent;
+      const alias = document.getElementByIdା
+
+System: ElementById('alias-text').textContent;
       navigator.clipboard.writeText(alias).then(() => {
         const button = document.querySelector('.copy-button');
         button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado';
@@ -344,27 +428,26 @@
       window.open(urlWhatsApp, '_blank');
     }
 
-    // Menú móvil
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      mobileMenu.classList.toggle('active');
-      menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
-    });
+    // Hamburger menu toggle
+    var menu = document.querySelector('.hamburger');
+    function toggleMenu(event) {
+      this.classList.toggle('is-active');
+      document.querySelector('.menuppal').classList.toggle('is_active');
+      event.preventDefault();
+    }
+    menu.addEventListener('click', toggleMenu, false);
 
     // Cerrar menú al hacer clic en un enlace
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
+    document.querySelectorAll('.menuppal a').forEach(link => {
       link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('active');
-        menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+        document.querySelector('.menuppal').classList.remove('is_active');
+        document.querySelector('.hamburger').classList.remove('is-active');
       });
     });
 
     // Smooth scroll para anclas con ajuste de posición
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         const headerHeight = document.querySelector('header').offsetHeight;
