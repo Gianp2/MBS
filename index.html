@@ -17,12 +17,55 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     section {
-      scroll-margin-top: 80px; /* Adjusts for fixed header height */
+      scroll-margin-top: 80px;
     }
     .gallery-item img {
-      max-height: 320px; /* Consistent height for visibility */
-      object-fit: cover; /* Ensures images fill the space */
-      width: 100%; /* Full width within grid cell */
+      max-height: 320px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #facc15;
+      transform: scale(1.05);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #facc15;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    /* Mobile menu styles */
+    #mobile-menu {
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    #mobile-menu.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    #mobile-menu a {
+      display: block;
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-weight: 500;
+      text-align: center;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    #mobile-menu a:hover {
+      background-color: #4b5563; /* Tailwind gray-600 */
+      color: #facc15; /* Tailwind yellow-400 */
     }
   </style>
 </head>
@@ -37,39 +80,30 @@
         </h1>
       </div>
       <nav class="hidden md:flex space-x-8" aria-label="Navegación principal">
-        <a href="#inicio" class="hover:text-yellow-400 transition-colors font-medium">Inicio</a>
-        <a href="#servicios" class="hover:text-yellow-400 transition-colors font-medium">Servicios</a>
-        <a href="#pagos" class="hover:text-yellow-400 transition-colors font-medium">Pagos</a>
-        <a href="#contacto" class="hover:text-yellow-400 transition-colors font-medium">Contacto</a>
+        <a href="#inicio" class="nav-link font-medium">Inicio</a>
+        <a href="#servicios" class="nav-link font-medium">Servicios</a>
+        <a href="#turnos" class="nav-link font-medium">Reserva</a>
+        <a href="#pagos" class="nav-link font-medium">Pagos</a>
+        <a href="#contacto" class="nav-link font-medium">Contacto</a>
       </nav>
       <button class="md:hidden menu-toggle" aria-label="Abrir menú móvil">
         <i class="fas fa-bars text-2xl"></i>
       </button>
     </div>
     
-    <nav class="hidden md:hidden flex-col space-y-4 p-4 bg-gray-800 text-gray-200" id="mobile-menu" aria-label="Menú móvil">
-      <a href="#inicio" class="hover:text-yellow-400 transition-colors">Inicio</a>
-      <a href="#nosotros" class="hover:text-yellow-400 transition-colors">Nosotros</a>
-      <a href="#galeria" class="hover:text-yellow-400 transition-colors">Galería</a>
-      <a href="#servicios" class="hover:text-yellow-400 transition-colors">Servicios</a>
-      <a href="#pagos" class="hover:text-yellow-400 transition-colors">Pagos</a>
-      <a href="#contacto" class="hover:text-yellow-400 transition-colors">Contacto</a>
+    <nav class="hidden md:hidden flex-col bg-gray-800 text-gray-200 absolute top-16 left-0 w-full shadow-lg" id="mobile-menu" aria-label="Menú móvil">
+      <a href="#inicio" class="nav-link">Inicio</a>
+      <a href="#servicios" class="nav-link">Servicios</a>
+      <a href="#turnos" class="nav-link">Reserva</a>
+      <a href="#pagos" class="nav-link">Pagos</a>
+      <a href="#contacto" class="nav-link">Contacto</a>
     </nav>
   </header>
 
   <main>
-    <section id="inicio" 
-      class="relative h-[700px] flex items-center justify-center text-center text-gray-200">
-      
-      <!-- Fondo con imagen -->
-      <div class="absolute inset-0 bg-cover bg-center" 
-          style="background-image: url('img/fotohero.jpg');">
-      </div>
-
-      <!-- Capa oscura para mejorar contraste -->
+    <section id="inicio" class="relative h-[700px] flex items-center justify-center text-center text-gray-200">
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('img/fotohero.jpg');"></div>
       <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
-
-      <!-- Contenido -->
       <div class="relative z-10 px-6 md:px-12 max-w-4xl">
         <h2 class="text-4xl md:text-6xl font-bold mb-6 font-['Roboto'] leading-tight drop-shadow-lg">
           Bienvenidos a <span class="text-yellow-400">MBS Barber Studio</span>
@@ -78,8 +112,7 @@
           Experimenta un servicio VIP con cortes de cabello, barba y color de primer nivel en 
           <span class="font-semibold">Las Parejas, Santa Fe</span>.
         </p>
-        <a href="#turnos" 
-          class="inline-block bg-yellow-400 text-gray-900 font-semibold py-4 px-10 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl transition-all duration-300 text-lg">
+        <a href="#turnos" class="inline-block bg-yellow-400 text-gray-900 font-semibold py-4 px-10 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl transition-all duration-300 text-lg">
           Reservar Turno
         </a>
       </div>
@@ -109,7 +142,6 @@
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Roboto'] text-gray-200">Galería</h2>
         <p class="text-center mb-10 text-lg text-gray-300">Explora nuestros trabajos destacados y síguenos en <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">Instagram</a> para más inspiración.</p>
-        < springboard:ArtifactRef artifact_id="65d57cb7-3101-4e43-bc2b-612efff6659a" title="index.html" contentType="text/html" artifact_version_id="545fc081-6e45-47f9-b8eb-5948963b1771" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div class="gallery-item relative group">
             <img src="img/corte.jpg" alt="Corte y barba" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
@@ -120,10 +152,7 @@
             <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Coloración Masculina</p>
           </div>
           <div class="gallery-item relative group">
-            <img src="img/corte3.jpg" 
-                alt="Corte de cabello hombre" 
-                class="w-full h-80 object-cover object-top rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" 
-                loading="lazy">
+            <img src="img/corte3.jpg" alt="Corte de cabello hombre" class="w-full h-80 object-cover object-top rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
             <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte de Cabello</p>
           </div>
           <div class="gallery-item relative group">
@@ -255,7 +284,7 @@
     }
 
     function enviarWhatsApp(event) {
-      event.preventDefault(); // Prevent default form submission
+      event.preventDefault();
       const nombre = document.getElementById('nombre').value;
       const servicio = document.getElementById('servicio').value;
       const fechaInput = document.getElementById('fecha').value;
@@ -274,6 +303,7 @@
     const mobileMenu = document.getElementById('mobile-menu');
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('active');
       menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
     });
 
@@ -281,6 +311,7 @@
     document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('active');
         menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
       });
     });
