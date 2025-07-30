@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MBS Barber Studio - Experiencia VIP en cortes de cabello, barba y color en Las Parejas, Santa Fe. Reserva tu turno hoy.">
+  <meta name="keywords" content="barbería, cortes de cabello, barba, color, Las Parejas, Santa Fe, MBS Barber Studio">
+  <meta name="author" content="MBS Barber Studio">
+  <meta property="og:title" content="MBS Barber Studio - Las Parejas, Santa Fe">
+  <meta property="og:description" content="Experimenta un servicio VIP con cortes de cabello, barba y color de primer nivel.">
+  <meta property="og:image" content="img/logomonkey.png">
+  <meta property="og:url" content="https://www.mbsbarberstudio.com">
+  <title>MBS Barber Studio</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    section {
+      scroll-margin-top: 80px; /* Adjusts for fixed header height */
+    }
+    .gallery-item img {
+      max-height: 320px; /* Consistent height for visibility */
+      object-fit: cover; /* Ensures images fill the space */
+      width: 100%; /* Full width within grid cell */
+    }
+  </style>
+</head>
+
+<body class="font-['Montserrat'] bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
+  <header class="bg-gray-900 text-gray-200 sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <img src="img/logomonkey.png" alt="MBS Barber Studio Logo" class="h-14 w-auto">
+        <h1 class="logo-text text-2xl md:text-3xl font-extrabold tracking-wide">
+          MBS <span class="text-yellow-400 drop-shadow-glow">Barber</span> Studio
+        </h1>
+      </div>
+      <nav class="hidden md:flex space-x-8" aria-label="Navegación principal">
+        <a href="#inicio" class="hover:text-yellow-400 transition-colors font-medium">Inicio</a>
+        <a href="#servicios" class="hover:text-yellow-400 transition-colors font-medium">Servicios</a>
+        <a href="#pagos" class="hover:text-yellow-400 transition-colors font-medium">Pagos</a>
+        <a href="#contacto" class="hover:text-yellow-400 transition-colors font-medium">Contacto</a>
+      </nav>
+      <button class="md:hidden menu-toggle" aria-label="Abrir menú móvil">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+    </div>
+    
+    <nav class="hidden md:hidden flex-col space-y-4 p-4 bg-gray-800 text-gray-200" id="mobile-menu" aria-label="Menú móvil">
+      <a href="#inicio" class="hover:text-yellow-400 transition-colors">Inicio</a>
+      <a href="#nosotros" class="hover:text-yellow-400 transition-colors">Nosotros</a>
+      <a href="#galeria" class="hover:text-yellow-400 transition-colors">Galería</a>
+      <a href="#servicios" class="hover:text-yellow-400 transition-colors">Servicios</a>
+      <a href="#pagos" class="hover:text-yellow-400 transition-colors">Pagos</a>
+      <a href="#contacto" class="hover:text-yellow-400 transition-colors">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" 
+      class="relative h-[700px] flex items-center justify-center text-center text-gray-200">
+      
+      <!-- Fondo con imagen -->
+      <div class="absolute inset-0 bg-cover bg-center" 
+          style="background-image: url('img/fotohero.jpg');">
+      </div>
+
+      <!-- Capa oscura para mejorar contraste -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
+
+      <!-- Contenido -->
+      <div class="relative z-10 px-6 md:px-12 max-w-4xl">
+        <h2 class="text-4xl md:text-6xl font-bold mb-6 font-['Roboto'] leading-tight drop-shadow-lg">
+          Bienvenidos a <span class="text-yellow-400">MBS Barber Studio</span>
+        </h2>
+        <p class="text-lg md:text-2xl mb-8 leading-relaxed drop-shadow-md">
+          Experimenta un servicio VIP con cortes de cabello, barba y color de primer nivel en 
+          <span class="font-semibold">Las Parejas, Santa Fe</span>.
+        </p>
+        <a href="#turnos" 
+          class="inline-block bg-yellow-400 text-gray-900 font-semibold py-4 px-10 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl transition-all duration-300 text-lg">
+          Reservar Turno
+        </a>
+      </div>
+    </section>
+
+    <section id="nosotros" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-8 font-['Roboto'] text-gray-200">Sobre Nosotros</h2>
+        <p class="text-lg mb-10 max-w-3xl mx-auto leading-relaxed text-gray-300">
+          En MBS Barber Studio, combinamos pasión y profesionalismo para ofrecerte una experiencia única en barbería. 
+          Nuestro equipo está comprometido con realzar tu estilo personal con cortes de cabello, arreglos de barba y coloración de alta calidad.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div class="relative group">
+            <img src="img/fotouli.jpg" alt="Nuestro equipo" class="w-full h-80 object-cover object-top rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200">Equipo Profesional</p>
+          </div>
+          <div class="relative group">
+            <img src="img/local2.jpg" alt="Nuestro salón" class="w-full h-80 object-cover object-[center_30%] rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200">Ambiente Moderno</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria" class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-8 font-['Roboto'] text-gray-200">Galería</h2>
+        <p class="text-center mb-10 text-lg text-gray-300">Explora nuestros trabajos destacados y síguenos en <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">Instagram</a> para más inspiración.</p>
+        < springboard:ArtifactRef artifact_id="65d57cb7-3101-4e43-bc2b-612efff6659a" title="index.html" contentType="text/html" artifact_version_id="545fc081-6e45-47f9-b8eb-5948963b1771" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div class="gallery-item relative group">
+            <img src="img/corte.jpg" alt="Corte y barba" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte y Barba</p>
+          </div>
+          <div class="gallery-item relative group">
+            <img src="img/corte2.jpg" alt="Coloración masculina" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Coloración Masculina</p>
+          </div>
+          <div class="gallery-item relative group">
+            <img src="img/corte3.jpg" 
+                alt="Corte de cabello hombre" 
+                class="w-full h-80 object-cover object-top rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" 
+                loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte de Cabello</p>
+          </div>
+          <div class="gallery-item relative group">
+            <img src="img/corte4.jpg" alt="Corte clásico" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte Clásico</p>
+          </div>
+          <div class="gallery-item relative group">
+            <img src="img/corte5.jpg" alt="Corte clásico" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte Clásico</p>
+          </div>
+          <div class="gallery-item relative group">
+            <img src="img/corte6.jpg" alt="Corte clásico" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy">
+            <p class="mt-4 font-semibold text-lg text-gray-200 text-center">Corte Clásico</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicios" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-8 font-['Roboto'] text-gray-200">Nuestros Servicios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="service-item text-center p-8 bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+            <i class="fas fa-scissors text-5xl text-yellow-400 mb-4"></i>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-200">Corte Hombre</h3>
+            <p class="text-gray-300">Corte personalizado con técnicas modernas.</p>
+          </div>
+          <div class="service-item text-center p-8 bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+            <i class="fas fa-cut text-5xl text-yellow-400 mb-4"></i>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-200">Corte + Barba</h3>
+            <p class="text-gray-300">Combinación perfecta para un look completo.</p>
+          </div>
+          <div class="service-item text-center p-8 bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+            <i class="fas fa-paint-brush text-5xl text-yellow-400 mb-4"></i>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-200">Color</h3>
+            <p class="text-gray-300">Coloración profesional para un estilo único.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="turnos" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-8 font-['Roboto'] text-gray-200">Reservar Turno</h2>
+        <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md" aria-label="Formulario de reserva de turno">
+          <form id="reserva-form" onsubmit="enviarWhatsApp(event)">
+            <div class="mb-6">
+              <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
+            <div class="mb-6">
+              <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200">Teléfono:</label>
+              <input type="tel" id="telefono" name="telefono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" placeholder="Ej: 3471511010" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
+            <div class="mb-6">
+              <label for="servicio" class="block text-sm font-medium mb-2 text-gray-200">Servicio:</label>
+              <select id="servicio" name="servicio" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <option value="" disabled selected>Selecciona un servicio</option>
+                <option value="Corte hombre">Corte hombre</option>
+                <option value="Corte + barba">Corte + barba</option>
+                <option value="Color">Color</option>
+              </select>
+            </div>
+            <div class="mb-6">
+              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200">Fecha y hora:</label>
+              <input type="datetime-local" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
+            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg">Reservar vía WhatsApp</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="pagos" class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-8 font-['Roboto'] text-gray-200">Pagos</h2>
+        <p class="mb-6 text-lg text-gray-300">Alias: <strong id="alias-text">mbs.barber.studio</strong></p>
+        <button onclick="copiarAlias()" class="copy-button bg-yellow-400 text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-yellow-500 transition-colors"><i class="fas fa-copy mr-2"></i> Copiar alias</button>
+        <p class="mt-6 text-lg text-gray-300"><a href="https://wa.me/+5493471511010?text=Hola,+te+env%C3%ADo+el+comprobante+de+mi+turno" target="_blank" class="text-yellow-400 hover:underline"><i class="fab fa-whatsapp mr-2"></i> Enviar comprobante por WhatsApp</a></p>
+      </div>
+    </section>
+
+    <section id="contacto" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-8 font-['Roboto'] text-gray-200">Contacto y Dirección</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="flex flex-col justify-center">
+            <p class="mb-6 text-lg text-gray-300"><i class="fas fa-clock mr-3"></i> Horario: De martes a sábados, 9:00 - 20:00</p>
+            <p class="mb-6 text-lg text-gray-300"><i class="fas fa-phone mr-3"></i> Teléfono: <a href="https://wa.me/+5493471511010" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">+54 9 3471 511010</a></p>
+            <p class="mb-6 text-lg text-gray-300"><i class="fab fa-instagram mr-3"></i> Instagram: <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">@mbsbarberstudio</a></p>
+            <p class="mb-6 text-lg text-gray-300"><i class="fas fa-map-marker-alt mr-3"></i> Dirección: Calle 29 676, Las Parejas, Santa Fe 2505</p>
+          </div>
+          <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3353.123456789!2d-61.987654321!3d-32.682345678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zQ2FsbGUgMjkgNjc2LCBMYXMgUGFyZWphcywgU2FudGEgRmUgMjUwNQ!5e0!3m2!1ses!2sar!4v1631234567890" width="100%" height="350" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" aria-label="Mapa de ubicación"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-200 py-12">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h3 class="text-2xl font-bold mb-6 font-['Roboto']">Conéctate con Nosotros</h3>
+        <div class="flex justify-center space-x-6 mb-6">
+          <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-3xl hover:text-yellow-400 transition-colors"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/mbsbarberstudio" target="_blank" rel="noopener" class="text-3xl hover:text-yellow-400 transition-colors"><i class="fab fa-facebook"></i></a>
+          <a href="https://wa.me/+5493471511010" target="_blank" rel="noopener" class="text-3xl hover:text-yellow-400 transition-colors"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-10 pt-6 text-center">
+        <p class="text-sm text-gray-300">&copy; 2025 MBS Barber Studio. Todos los derechos reservados. Diseñado con pasión en Las Parejas, Santa Fe.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function copiarAlias() {
+      const alias = document.getElementById('alias-text').textContent;
+      navigator.clipboard.writeText(alias).then(() => {
+        const button = document.querySelector('.copy-button');
+        button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado';
+        setTimeout(() => {
+          button.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar alias';
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar alias:', err);
+      });
+    }
+
+    function enviarWhatsApp(event) {
+      event.preventDefault(); // Prevent default form submission
+      const nombre = document.getElementById('nombre').value;
+      const servicio = document.getElementById('servicio').value;
+      const fechaInput = document.getElementById('fecha').value;
+      const fecha = new Date(fechaInput);
+      const fechaFormateada = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const horaFormateada = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const mensaje = `Hola, quiero reservar un turno:\nNombre: ${nombre}\nServicio: ${servicio}\nFecha: ${fechaFormateada}\nHora: ${horaFormateada}`;
+      const numeroWhatsApp = '5493471511010';
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+      window.open(urlWhatsApp, '_blank');
+    }
+
+    // Menú móvil
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
+    });
+
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+      });
+    });
+
+    // Smooth scroll para anclas con ajuste de posición
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        const headerHeight = document.querySelector('header').offsetHeight;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
