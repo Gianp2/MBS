@@ -3,59 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Admin - Peluquería</title>
+  <title>Panel Admin - MBS Barber Studio</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
-      background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
-      color: #2d3748;
+      color: #e5e7eb;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      padding: 2rem;
     }
     .login-container {
-      @apply max-w-sm w-full bg-white p-10 rounded-3xl shadow-xl transform hover:shadow-2xl transition-all duration-300;
+      @apply max-w-md w-full bg-gray-900 p-10 rounded-2xl shadow-2xl border border-yellow-400/30 transform transition-all duration-300 flex flex-col items-center;
     }
     .table-container {
-      @apply max-w-4xl w-full bg-white p-10 rounded-3xl shadow-xl mt-6;
+      @apply max-w-6xl w-full bg-gray-800 p-8 rounded-2xl shadow-2xl mt-8;
     }
     table {
       @apply w-full border-collapse;
     }
     th, td {
-      @apply px-6 py-4 border-b border-gray-200 text-gray-700 text-center;
+      @apply px-4 py-4 border-b border-gray-600 text-gray-200 text-center;
     }
     th {
-      @apply bg-gradient-to-r from-indigo-50 to-purple-50 font-semibold text-gray-800 uppercase text-xs tracking-widest;
+      @apply bg-gray-700 font-semibold text-gray-100 uppercase text-sm tracking-wider;
     }
     tr {
       @apply transition-colors duration-200;
     }
     tr:hover {
-      @apply bg-indigo-50/50;
+      @apply bg-gray-700/50;
     }
     .delete {
-      @apply bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+      @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
     }
-    input {
-      @apply w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all;
+    input, select {
+      @apply w-full p-3 rounded-lg border border-gray-600 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all;
     }
-    button:not(.delete) {
-      @apply bg-indigo-500 text-white px-6 py-3 rounded-xl hover:bg-indigo-600 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+    button:not(.delete):not(.back) {
+      @apply bg-yellow-400 text-gray-900 font-semibold px-6 py-3 rounded-xl hover:bg-yellow-500 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+    }
+    .back {
+      @apply bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg hover:bg-gray-500 transition-all shadow-md flex items-center gap-2;
     }
     h1 {
-      @apply text-4xl font-bold text-center text-gray-900 mb-8;
+      @apply text-4xl font-bold text-center text-gray-100 mb-8 flex items-center justify-center gap-3;
     }
     h2 {
-      @apply text-2xl font-semibold text-gray-800 mb-6 text-center;
+      @apply text-2xl font-semibold text-gray-100 mb-6 text-center;
     }
     h3 {
-      @apply text-lg font-semibold text-gray-800 mb-6 text-center;
+      @apply text-lg font-semibold text-gray-100 mb-6 flex items-center justify-center gap-2;
     }
     .animate-slide-in {
       animation: slideIn 0.6s ease-out;
@@ -67,93 +70,214 @@
     .icon {
       @apply text-sm;
     }
+    .spinner {
+      @apply border-4 border-t-yellow-400 border-gray-600 rounded-full w-6 h-6 animate-spin mx-auto;
+    }
+    .no-turnos {
+      @apply text-center text-gray-400 py-8;
+    }
+    .password-container {
+      @apply relative w-full;
+    }
+    .toggle-password {
+      @apply absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 cursor-pointer;
+    }
+    .error-message {
+      @apply text-red-400 text-sm mt-2 opacity-0 transition-opacity duration-300 text-center;
+    }
+    .error-message.show {
+      @apply opacity-100;
+    }
+    @media (max-width: 640px) {
+      table, thead, tbody, th, td, tr {
+        @apply block;
+      }
+      thead tr {
+        @apply hidden;
+      }
+      tr {
+        @apply mb-4 border-b border-gray-600;
+      }
+      td {
+        @apply block text-left px-4 py-2 relative;
+      }
+      td:before {
+        @apply content-attr-data-label font-semibold text-yellow-400 mr-2;
+        display: inline-block;
+        width: 100px;
+      }
+      td:nth-child(1):before { content: "Nombre"; }
+      td:nth-child(2):before { content: "Teléfono"; }
+      td:nth-child(3):before { content: "Fecha"; }
+      td:nth-child(4):before { content: "Hora"; }
+      td:nth-child(5):before { content: "Acción"; }
+    }
   </style>
 </head>
 <body>
+  <div class="w-full max-w-6xl flex justify-start mb-4">
+    <a href="index.html" class="back"><i class="fas fa-arrow-left icon"></i> Volver</a>
+  </div>
 
-<h1 class="animate-slide-in">Panel de Administración</h1>
+  <h1 class="animate-slide-in"><i class="fas fa-user-shield"></i> Panel de Administración</h1>
 
-<div id="login-section" class="login-container animate-slide-in">
-  <h3>Ingrese clave de administrador</h3>
-  <input type="password" id="admin-password" placeholder="Clave" class="mb-4">
-  <button onclick="login()"><i class="fas fa-sign-in-alt icon"></i> Entrar</button>
-</div>
+  <div id="login-section" class="login-container animate-slide-in">
+    <h3><i class="fas fa-lock icon"></i> Ingrese clave de administrador</h3>
+    <div class="password-container mb-4">
+      <input type="password" id="admin-password" placeholder="Clave" class="pr-10">
+      <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+    </div>
+    <p id="error-message" class="error-message">Clave incorrecta</p>
+    <button onclick="login()"><i class="fas fa-sign-in-alt icon"></i> Entrar</button>
+  </div>
 
-<div id="admin-section" style="display:none;" class="table-container animate-slide-in">
-  <h2>Turnos reservados</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Teléfono</th>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody id="turnos-list"></tbody>
-  </table>
-</div>
+  <div id="admin-section" style="display:none;" class="table-container animate-slide-in">
+    <h2>Turnos Reservados</h2>
+    <div class="mb-6 flex justify-center">
+      <input type="text" id="search-input" placeholder="Buscar por nombre o fecha..." class="max-w-md">
+    </div>
+    <div id="loading" class="spinner hidden"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="turnos-list"></tbody>
+    </table>
+    <p id="no-turnos" class="no-turnos hidden">No hay turnos reservados.</p>
+  </div>
 
-<script>
-const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd"; // Reemplazar
-const ADMIN_KEY = "29676"; // Cambiá esta clave
+  <script>
+    const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd";
+    const ADMIN_KEY = "1234";
 
-// Login simple
-function login() {
-  const pass = document.getElementById("admin-password").value;
-  if (pass === ADMIN_KEY) {
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("admin-section").style.display = "block";
-    cargarTurnos();
-  } else {
-    alert("Clave incorrecta");
-  }
-}
-
-// Cargar turnos desde SheetDB
-async function cargarTurnos() {
-  try {
-    const res = await fetch(API_URL);
-    const datos = await res.json();
-    const lista = document.getElementById("turnos-list");
-    lista.innerHTML = "";
-
-    datos.forEach((t, i) => {
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-        <td>${t.nombre}</td>
-        <td>${t.telefono}</td>
-        <td>${t.fecha}</td>
-        <td>${t.hora}</td>
-        <td><button class="delete" onclick="eliminarTurno('${t.id}')"><i class="fas fa-trash-alt icon"></i> Eliminar</button></td>
-      `;
-      lista.appendChild(fila);
-    });
-  } catch (err) {
-    console.error("Error cargando turnos:", err);
-  }
-}
-
-// Eliminar turno
-async function eliminarTurno(id) {
-  if (!confirm("¿Seguro que querés eliminar este turno?")) return;
-  try {
-    const res = await fetch(`${API_URL}/id/${id}`, {
-      method: "DELETE"
-    });
-    if (res.ok) {
-      alert("Turno eliminado");
-      cargarTurnos();
-    } else {
-      alert("Error al eliminar turno");
+    function formatDate(dateStr) {
+      const [month, day, year] = dateStr.split('/');
+      return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
     }
-  } catch (err) {
-    console.error(err);
-  }
-}
-</script>
 
+    function formatTime(timeStr) {
+      const [hours, minutes] = timeStr.includes('PM') || timeStr.includes('AM') 
+        ? convertTo24Hour(timeStr) 
+        : timeStr.split(':');
+      return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    function convertTo24Hour(timeStr) {
+      let [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':');
+      hours = parseInt(hours);
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+      return [`${hours}`, minutes];
+    }
+
+    function login() {
+      const pass = document.getElementById("admin-password").value;
+      const errorMessage = document.getElementById("error-message");
+      if (pass === ADMIN_KEY) {
+        errorMessage.classList.remove("show");
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("admin-section").style.display = "block";
+        cargarTurnos();
+      } else {
+        errorMessage.classList.add("show");
+        setTimeout(() => errorMessage.classList.remove("show"), 3000);
+      }
+    }
+
+    async function cargarTurnos(searchQuery = '') {
+      const lista = document.getElementById("turnos-list");
+      const noTurnos = document.getElementById("no-turnos");
+      const loading = document.getElementById("loading");
+      lista.innerHTML = "";
+      loading.classList.remove("hidden");
+      noTurnos.classList.add("hidden");
+
+      try {
+        const res = await fetch(API_URL);
+        let datos = await res.json();
+
+        if (searchQuery) {
+          searchQuery = searchQuery.toLowerCase();
+          datos = datos.filter(t => 
+            t.nombre.toLowerCase().includes(searchQuery) || 
+            formatDate(t.fecha).toLowerCase().includes(searchQuery)
+          );
+        }
+
+        datos.sort((a, b) => {
+          const dateA = new Date(`${a.fecha} ${a.hora}`);
+          const dateB = new Date(`${b.fecha} ${b.hora}`);
+          return dateA - dateB;
+        });
+
+        if (datos.length === 0) {
+          noTurnos.classList.remove("hidden");
+          loading.classList.add("hidden");
+          return;
+        }
+
+        datos.forEach((t, i) => {
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+            <td data-label="Nombre">${t.nombre}</td>
+            <td data-label="Teléfono">${t.telefono}</td>
+            <td data-label="Fecha">${formatDate(t.fecha)}</td>
+            <td data-label="Hora">${formatTime(t.hora)}</td>
+            <td data-label="Acción"><button class="delete" onclick="eliminarTurno('${t.id}')"><i class="fas fa-trash-alt icon"></i> Eliminar</button></td>
+          `;
+          lista.appendChild(fila);
+        });
+      } catch (err) {
+        console.error("Error cargando turnos:", err);
+        noTurnos.textContent = "⚠ Error al cargar los turnos.";
+        noTurnos.classList.remove("hidden");
+      } finally {
+        loading.classList.add("hidden");
+      }
+    }
+
+    async function eliminarTurno(id) {
+      if (!confirm("¿Seguro que querés eliminar este turno?")) return;
+      try {
+        const res = await fetch(`${API_URL}/id/${id}`, {
+          method: "DELETE"
+        });
+        if (res.ok) {
+          alert("Turno eliminado con éxito");
+          cargarTurnos(document.getElementById("search-input").value);
+        } else {
+          alert("Error al eliminar el turno");
+        }
+      } catch (err) {
+        console.error("Error eliminando turno:", err);
+        alert("Error al eliminar el turno");
+      }
+    }
+
+    document.getElementById("search-input").addEventListener("input", e => {
+      cargarTurnos(e.target.value);
+    });
+
+    document.getElementById("toggle-password").addEventListener("click", () => {
+      const passwordInput = document.getElementById("admin-password");
+      const icon = document.getElementById("toggle-password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  </script>
 </body>
-
 </html>
