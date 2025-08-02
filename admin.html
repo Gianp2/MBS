@@ -19,7 +19,7 @@
       padding: 2rem;
     }
     .login-container {
-      @apply max-w-md w-full bg-gray-900 p-10 rounded-2xl shadow-2xl border border-yellow-400/30 transform transition-all duration-300 flex flex-col items-center;
+      @apply max-w-md w-full bg-gradient-to-b from-gray-900 to-gray-800 p-10 rounded-3xl shadow-2xl border border-yellow-400/30 transform transition-all duration-300 flex flex-col items-center;
     }
     .table-container {
       @apply max-w-6xl w-full bg-gray-800 p-8 rounded-2xl shadow-2xl mt-8;
@@ -43,10 +43,10 @@
       @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
     }
     input, select {
-      @apply w-full p-3 rounded-lg border border-gray-600 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all;
+      @apply w-full p-4 rounded-xl border border-gray-600 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all shadow-inner;
     }
     button:not(.delete):not(.back) {
-      @apply bg-yellow-400 text-gray-900 font-semibold px-6 py-3 rounded-xl hover:bg-yellow-500 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+      @apply bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold px-8 py-4 rounded-xl hover:bg-yellow-600 hover:scale-105 transition-all shadow-md flex items-center justify-center gap-3 mx-auto text-lg;
     }
     .back {
       @apply bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg hover:bg-gray-500 transition-all shadow-md flex items-center gap-2;
@@ -58,7 +58,7 @@
       @apply text-2xl font-semibold text-gray-100 mb-6 text-center;
     }
     h3 {
-      @apply text-lg font-semibold text-gray-100 mb-6 flex items-center justify-center gap-2;
+      @apply text-xl font-semibold text-gray-100 mb-8 flex items-center justify-center gap-3;
     }
     .animate-slide-in {
       animation: slideIn 0.6s ease-out;
@@ -68,7 +68,7 @@
       100% { opacity: 1; transform: translateY(0); }
     }
     .icon {
-      @apply text-sm;
+      @apply text-base;
     }
     .spinner {
       @apply border-4 border-t-yellow-400 border-gray-600 rounded-full w-6 h-6 animate-spin mx-auto;
@@ -80,13 +80,7 @@
       @apply relative w-full;
     }
     .toggle-password {
-      @apply absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 cursor-pointer;
-    }
-    .error-message {
-      @apply text-red-400 text-sm mt-2 opacity-0 transition-opacity duration-300 text-center;
-    }
-    .error-message.show {
-      @apply opacity-100;
+      @apply absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 cursor-pointer text-lg;
     }
     @media (max-width: 640px) {
       table, thead, tbody, th, td, tr {
@@ -114,20 +108,20 @@
     }
   </style>
 </head>
-<body>
-  <div class="w-full max-w-6xl flex justify-start mb-4">
+<body class="min-h-screen flex flex-col justify-center">
+  <div class="w-full max-w-6xl flex justify-start mb-4 px-4">
     <a href="index.html" class="back"><i class="fas fa-arrow-left icon"></i> Volver</a>
   </div>
 
   <h1 class="animate-slide-in"><i class="fas fa-user-shield"></i> Panel de Administración</h1>
 
   <div id="login-section" class="login-container animate-slide-in">
+    <img src="img/logomonkey.png" alt="MBS Barber Studio Logo" class="h-16 mb-6">
     <h3><i class="fas fa-lock icon"></i> Ingrese clave de administrador</h3>
-    <div class="password-container mb-4">
-      <input type="password" id="admin-password" placeholder="Clave" class="pr-10">
+    <div class="password-container mb-6">
+      <input type="password" id="admin-password" placeholder="Clave" class="pr-12">
       <i class="fas fa-eye toggle-password" id="toggle-password"></i>
     </div>
-    <p id="error-message" class="error-message">Clave incorrecta</p>
     <button onclick="login()"><i class="fas fa-sign-in-alt icon"></i> Entrar</button>
   </div>
 
@@ -179,15 +173,12 @@
 
     function login() {
       const pass = document.getElementById("admin-password").value;
-      const errorMessage = document.getElementById("error-message");
       if (pass === ADMIN_KEY) {
-        errorMessage.classList.remove("show");
         document.getElementById("login-section").style.display = "none";
         document.getElementById("admin-section").style.display = "block";
         cargarTurnos();
       } else {
-        errorMessage.classList.add("show");
-        setTimeout(() => errorMessage.classList.remove("show"), 3000);
+        alert("Clave incorrecta, por favor intenta de nuevo.");
       }
     }
 
