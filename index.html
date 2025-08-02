@@ -45,7 +45,6 @@
     .nav-link:hover::after {
       width: 100%;
     }
-    /* Mobile menu styles */
     #mobile-menu {
       position: fixed;
       top: 0;
@@ -53,7 +52,7 @@
       height: 100vh;
       width: 75%;
       max-width: 300px;
-      background-color: rgba(31, 41, 55, 0.95); /* Tailwind gray-800 with opacity */
+      background-color: rgba(31, 41, 55, 0.95);
       transition: transform 0.3s ease-in-out;
       transform: translateX(100%);
       box-shadow: -4px 0 10px rgba(0, 0, 0, 0.3);
@@ -68,21 +67,20 @@
       font-size: 1.1rem;
       font-weight: 500;
       text-align: center;
-      color: #e5e7eb; /* Tailwind gray-200 */
+      color: #e5e7eb;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
     #mobile-menu a:hover {
-      background-color: #4b5563; /* Tailwind gray-600 */
-      color: #facc15; /* Tailwind yellow-400 */
+      background-color: #4b5563;
+      color: #facc15;
     }
-    /* Floating reserve button for mobile */
     .floating-reserve-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 100;
-      background-color: #facc15; /* Tailwind yellow-400 */
-      color: #1f2937; /* Tailwind gray-900 */
+      background-color: #facc15;
+      color: #1f2937;
       padding: 12px 20px;
       border-radius: 50px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -93,38 +91,85 @@
       transition: transform 0.3s ease, background-color 0.3s ease;
     }
     .floating-reserve-button:hover {
-      background-color: #eab308; /* Tailwind yellow-500 */
+      background-color: #eab308;
       transform: scale(1.05);
     }
     .floating-reserve-button img {
       width: 24px;
       height: 24px;
     }
-    @media (min-width: 768px) {
-      .floating-reserve-button {
-        display: none;
-      }
-    }
-    /* Admin button specific styles */
     .nav-link.admin {
-      background-color: #facc15; /* Tailwind yellow-400 */
-      color: #1f2937; /* Tailwind gray-900 */
+      background-color: #facc15;
+      color: #1f2937;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-weight: 600;
       transition: background-color 0.3s ease, transform 0.3s ease;
     }
     .nav-link.admin:hover {
-      background-color: #eab308; /* Tailwind yellow-500 */
+      background-color: #eab308;
       color: #1f2937;
       transform: scale(1.05);
     }
     .nav-link.admin::after {
-      display: none; /* Remove underline effect for admin button */
+      display: none;
     }
     #mobile-menu a.nav-link.admin {
       margin: 0.5rem 1rem;
       border-radius: 8px;
+    }
+    .turno-card {
+      background-color: #1f2937;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+    .turno-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .turno-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #e5e7eb;
+      font-size: 0.95rem;
+    }
+    .turno-info span i {
+      color: #facc15;
+    }
+    .turno-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #e5e7eb;
+      font-size: 0.95rem;
+    }
+    .turno-status.available i {
+      color: #22c55e;
+    }
+    .turno-status.occupied i {
+      color: #ef4444;
+    }
+    @media (max-width: 640px) {
+      .turno-card {
+        @apply p-3 mb-4 text-sm;
+      }
+      .turno-info span {
+        @apply text-sm;
+      }
+      .form-turno {
+        @apply max-w-xs p-6;
+      }
+      input, select {
+        @apply text-sm p-3;
+      }
+      button[type="submit"] {
+        @apply text-base py-3;
+      }
     }
   </style>
 </head>
@@ -259,7 +304,7 @@
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Reservar Turno</h2>
         <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md" aria-label="Formulario de reserva de turno">
-          <form id="reserva-form" onsubmit="enviarWhatsApp(event)">
+          <form id="reserva-form" onsubmit="reservarTurno(event)">
             <div class="mb-6">
               <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Nombre:</label>
               <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
@@ -281,8 +326,16 @@
               <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha y hora:</label>
               <input type="datetime-local" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
-            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar vía WhatsApp</button>
+            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar Turno</button>
           </form>
+        </div>
+        <div id="turnos-disponibles" class="max-w-lg mx-auto mt-8 p-4 bg-gray-850 rounded-3xl shadow-2xl">
+          <h3 class="text-2xl font-semibold text-center mb-6 text-gray-200 font-['Poppins'] flex items-center justify-center gap-2">
+            <i class="fas fa-calendar-alt text-yellow-400"></i> Turnos Disponibles
+          </h3>
+          <div id="turnos-list"></div>
+          <p id="no-turnos" class="text-center text-gray-300 py-6 text-base hidden"><i class="fas fa-exclamation-circle text-yellow-400"></i> No hay turnos disponibles.</p>
+          <div id="loading" class="border-4 border-t-yellow-400 border-gray-600 rounded-full w-6 h-6 animate-spin mx-auto hidden"></div>
         </div>
       </div>
     </section>
@@ -307,7 +360,7 @@
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Contacto y Dirección</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="flex flex-col justify-center">
-            <p class="mb-6 text-lg text-gray-300"><i class="fas fa-clock mr-3"></i> Horario: De Martes a Sábados</p>
+            <p class="mb-6 text-lg text-gray-300"><i class="fas fa-clock mr-3"></i> Horario: Martes a Sábados, 9:00-12:00 y 15:00-20:00</p>
             <p class="mb-6 text-lg text-gray-300"><i class="fas fa-phone mr-3"></i> Teléfono: <a href="https://wa.me/+5493471511010" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">+54 9 3471 511010</a></p>
             <p class="mb-6 text-lg text-gray-300"><i class="fab fa-instagram mr-3"></i> Instagram: <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-yellow-400 hover:underline">@mbsbarberstudio</a></p>
             <p class="mb-6 text-lg text-gray-300"><i class="fas fa-map-marker-alt mr-3"></i> Dirección: Calle 29 676, Las Parejas.</p>
@@ -335,13 +388,14 @@
     </div>
   </footer>
 
-  <!-- Floating Reserve Button -->
   <a href="#turnos" class="floating-reserve-button" aria-label="Reservar Turno">
     <img src="img/logoreserva.png" alt="Ícono de reserva">
     <span class="font-['Poppins']">Reservar Turno</span>
   </a>
 
   <script>
+    const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd";
+
     function copiarAlias() {
       const alias = document.getElementById('alias-text').textContent;
       navigator.clipboard.writeText(alias).then(() => {
@@ -355,20 +409,176 @@
       });
     }
 
-    function enviarWhatsApp(event) {
+    function formatDate(dateStr) {
+      const [month, day, year] = dateStr.split('/');
+      return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+    }
+
+    function formatTime(timeStr) {
+      const [hours, minutes] = timeStr.includes('PM') || timeStr.includes('AM') 
+        ? convertTo24Hour(timeStr) 
+        : timeStr.split(':');
+      return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    function convertTo24Hour(timeStr) {
+      let [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':');
+      hours = parseInt(hours);
+      if (modifier === 'PM' && hours !== 12) hours += 12;
+      if (modifier === 'AM' && hours === 12) hours = 0;
+      return [`${hours}`, minutes];
+    }
+
+    function getNextWorkingDays(daysCount) {
+      const today = new Date();
+      const workingDays = [];
+      let count = 0;
+      let currentDay = new Date(today);
+      while (count < daysCount) {
+        currentDay.setDate(currentDay.getDate() + 1);
+        const dayOfWeek = currentDay.getDay();
+        if (dayOfWeek >= 2 && dayOfWeek <= 6) {
+          workingDays.push(new Date(currentDay));
+          count++;
+        }
+      }
+      return workingDays;
+    }
+
+    function generateTimeSlots() {
+      const slots = [];
+      for (let hour = 9; hour <= 11; hour++) {
+        slots.push(`${hour.toString().padStart(2, '0')}:00`);
+        slots.push(`${hour.toString().padStart(2, '0')}:30`);
+      }
+      slots.push('12:00');
+      for (let hour = 15; hour <= 19; hour++) {
+        slots.push(`${hour.toString().padStart(2, '0')}:00`);
+        slots.push(`${hour.toString().padStart(2, '0')}:30`);
+      }
+      slots.push('20:00');
+      return slots;
+    }
+
+    async function cargarTurnosDisponibles() {
+      const lista = document.getElementById("turnos-list");
+      const noTurnos = document.getElementById("no-turnos");
+      const loading = document.getElementById("loading");
+      lista.innerHTML = "";
+      loading.classList.remove("hidden");
+      noTurnos.classList.add("hidden");
+
+      try {
+        const res = await fetch(API_URL);
+        const datos = await res.json();
+        const workingDays = getNextWorkingDays(5);
+        const timeSlots = generateTimeSlots();
+
+        workingDays.forEach(day => {
+          const formattedDate = formatDate(`${day.getMonth() + 1}/${day.getDate()}/${day.getFullYear()}`);
+          const card = document.createElement("div");
+          card.className = "turno-card";
+          card.innerHTML = `
+            <div class="turno-info">
+              <span><i class="fas fa-calendar-alt"></i> <strong>${formattedDate}</strong></span>
+            </div>
+            <div class="turno-info">
+              ${timeSlots.map(slot => {
+                const isOccupied = datos.some(t => 
+                  formatDate(t.fecha) === formattedDate && formatTime(t.hora) === slot
+                );
+                return `
+                  <span class="turno-status ${isOccupied ? 'occupied' : 'available'}">
+                    <i class="fas fa-circle"></i> ${slot} ${isOccupied ? '(Ocupado)' : '(Disponible)'}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+          `;
+          lista.appendChild(card);
+        });
+
+        if (!datos.length && !workingDays.length) {
+          noTurnos.classList.remove("hidden");
+        }
+      } catch (err) {
+        console.error("Error cargando turnos:", err);
+        noTurnos.textContent = "⚠ Error al cargar los turnos.";
+        noTurnos.classList.remove("hidden");
+      } finally {
+        loading.classList.add("hidden");
+      }
+    }
+
+    async function reservarTurno(event) {
       event.preventDefault();
       const nombre = document.getElementById('nombre').value;
+      const telefono = document.getElementById('telefono').value;
       const servicio = document.getElementById('servicio').value;
       const fechaInput = document.getElementById('fecha').value;
       const fecha = new Date(fechaInput);
-      const fechaFormateada = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const horaFormateada = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      const mensaje = `Hola, quiero reservar un turno:\nNombre: ${nombre}\nServicio: ${servicio}\nFecha: ${fechaFormateada}\nHora: ${horaFormateada}`;
-      const numeroWhatsApp = '5493471511010';
-      const mensajeCodificado = encodeURIComponent(mensaje);
-      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
-      window.open(urlWhatsApp, '_blank');
+      const dayOfWeek = fecha.getDay();
+      const hours = fecha.getHours();
+      const minutes = fecha.getMinutes();
+
+      if (dayOfWeek < 2 || dayOfWeek > 6) {
+        alert('Por favor, selecciona un día de martes a sábado.');
+        return;
+      }
+      if ((hours < 9 || hours > 20 || (hours >= 12 && hours < 15)) || (minutes !== 0 && minutes !== 30 && !(hours === 12 && minutes === 0) && !(hours === 20 && minutes === 0))) {
+        alert('Por favor, selecciona un horario entre 9:00-12:00 o 15:00-20:00, en intervalos de 30 minutos.');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL);
+        const datos = await res.json();
+        const formattedDate = formatDate(`${fecha.getMonth() + 1}/${fecha.getDate()}/${fecha.getFullYear()}`);
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        const isOccupied = datos.some(t => 
+          formatDate(t.fecha) === formattedDate && formatTime(t.hora) === formattedTime
+        );
+
+        if (isOccupied) {
+          alert('El turno seleccionado ya está ocupado. Por favor, elige otro horario.');
+          return;
+        }
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre,
+            telefono,
+            servicio,
+            fecha: formattedDate,
+            hora: formattedTime
+          })
+        });
+
+        if (response.ok) {
+          alert('Turno reservado con éxito.');
+          document.getElementById('reserva-form').reset();
+          cargarTurnosDisponibles();
+        } else {
+          alert('Error al reservar el turno. Inténtalo de nuevo.');
+        }
+      } catch (err) {
+        console.error('Error reservando turno:', err);
+        alert('Error al reservar el turno. Inténtalo de nuevo.');
+      }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const fechaInput = document.getElementById('fecha');
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 30);
+      fechaInput.min = today.toISOString().slice(0, 16);
+      fechaInput.max = maxDate.toISOString().slice(0, 16);
+      cargarTurnosDisponibles();
+    });
 
     // Menú móvil
     const menuToggle = document.querySelector('.menu-toggle');
@@ -379,7 +589,6 @@
       menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
     });
 
-    // Cerrar menú al hacer clic en un enlace
     document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
@@ -388,7 +597,6 @@
       });
     });
 
-    // Smooth scroll para anclas con ajuste de posición
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
