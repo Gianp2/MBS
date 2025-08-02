@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - Peluquería</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #2d3748;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      @apply max-w-sm w-full bg-white p-10 rounded-3xl shadow-xl transform hover:shadow-2xl transition-all duration-300;
+    }
+    .table-container {
+      @apply max-w-4xl w-full bg-white p-10 rounded-3xl shadow-xl mt-6;
+    }
+    table {
+      @apply w-full border-collapse;
+    }
+    th, td {
+      @apply px-6 py-4 border-b border-gray-200 text-gray-700 text-center;
+    }
+    th {
+      @apply bg-gradient-to-r from-indigo-50 to-purple-50 font-semibold text-gray-800 uppercase text-xs tracking-widest;
+    }
+    tr {
+      @apply transition-colors duration-200;
+    }
+    tr:hover {
+      @apply bg-indigo-50/50;
+    }
+    .delete {
+      @apply bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+    }
+    input {
+      @apply w-full p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all;
+    }
+    button:not(.delete) {
+      @apply bg-indigo-500 text-white px-6 py-3 rounded-xl hover:bg-indigo-600 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+    }
+    h1 {
+      @apply text-4xl font-bold text-center text-gray-900 mb-8;
+    }
+    h2 {
+      @apply text-2xl font-semibold text-gray-800 mb-6 text-center;
+    }
+    h3 {
+      @apply text-lg font-semibold text-gray-800 mb-6 text-center;
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    @keyframes slideIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .icon {
+      @apply text-sm;
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="animate-slide-in">Panel de Administración</h1>
+
+<div id="login-section" class="login-container animate-slide-in">
+  <h3>Ingrese clave de administrador</h3>
+  <input type="password" id="admin-password" placeholder="Clave" class="mb-4">
+  <button onclick="login()"><i class="fas fa-sign-in-alt icon"></i> Entrar</button>
+</div>
+
+<div id="admin-section" style="display:none;" class="table-container animate-slide-in">
+  <h2>Turnos reservados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody id="turnos-list"></tbody>
+  </table>
+</div>
+
+<script>
+const API_URL = "https://sheetdb.io/api/v1/TU_API_URL"; // Reemplazar
+const ADMIN_KEY = "1234"; // Cambiá esta clave
+
+// Login simple
+function login() {
+  const pass = document.getElementById("admin-password").value;
+  if (pass === ADMIN_KEY) {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("admin-section").style.display = "block";
+    cargarTurnos();
+  } else {
+    alert("Clave incorrecta");
+  }
+}
+
+// Cargar turnos desde SheetDB
+async function cargarTurnos() {
+  try {
+    const res = await fetch(API_URL);
+    const datos = await res.json();
+    const lista = document.getElementById("turnos-list");
+    lista.innerHTML = "";
+
+    datos.forEach((t, i) => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${t.nombre}</td>
+        <td>${t.telefono}</td>
+        <td>${t.fecha}</td>
+        <td>${t.hora}</td>
+        <td><button class="delete" onclick="eliminarTurno('${t.id}')"><i class="fas fa-trash-alt icon"></i> Eliminar</button></td>
+      `;
+      lista.appendChild(fila);
+    });
+  } catch (err) {
+    console.error("Error cargando turnos:", err);
+  }
+}
+
+// Eliminar turno
+async function eliminarTurno(id) {
+  if (!confirm("¿Seguro que querés eliminar este turno?")) return;
+  try {
+    const res = await fetch(`${API_URL}/id/${id}`, {
+      method: "DELETE"
+    });
+    if (res.ok) {
+      alert("Turno eliminado");
+      cargarTurnos();
+    } else {
+      alert("Error al eliminar turno");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+</script>
+
+</body>
+</html>
