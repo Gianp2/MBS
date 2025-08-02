@@ -25,35 +25,25 @@
       @apply max-w-xs w-full bg-gradient-to-b from-gray-900 to-gray-850 p-8 rounded-3xl shadow-lg border border-yellow-400/20 transform transition-all duration-300 flex flex-col items-center;
     }
     .table-container {
-      @apply max-w-xs w-full bg-gray-850 p-4 rounded-3xl shadow-2xl mt-6;
+      @apply max-w-3xl w-full bg-gray-850 p-4 rounded-3xl shadow-2xl mt-6;
     }
-    .turno-card {
-      background-color: #1f2937;
-      border-radius: 1rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255, 215, 0, 0.2);
+    .turno-table {
+      @apply w-full border-collapse;
     }
-    .turno-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
+    .turno-table th, .turno-table td {
+      @apply border border-gray-600 p-3 text-gray-200 text-left;
     }
-    .turno-info span {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #e5e7eb;
-      font-size: 0.95rem;
+    .turno-table th {
+      @apply bg-gray-900 font-semibold text-sm;
     }
-    .turno-info span i {
-      color: #facc15;
+    .turno-table td {
+      @apply text-sm;
     }
-    .turno-actions {
-      margin-top: 0.6rem;
-      display: flex;
-      justify-content: flex-end;
+    .turno-table tr:hover {
+      @apply bg-gray-700;
+    }
+    .turno-table th i, .turno-table td i {
+      @apply text-yellow-400 mr-2;
     }
     .delete {
       @apply bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-1.5 rounded-lg hover:bg-red-800 transition-all shadow-md flex items-center justify-center gap-1.5 mx-auto text-sm;
@@ -114,6 +104,9 @@
       .table-container {
         @apply max-w-xs p-4;
       }
+      .turno-table th, .turno-table td {
+        @apply p-2 text-sm;
+      }
       h1 {
         @apply text-2xl;
       }
@@ -125,15 +118,6 @@
       }
       button:not(.delete):not(.back) {
         @apply px-6 py-2 text-base;
-      }
-      .turno-card {
-        @apply p-3 mb-4 text-sm;
-      }
-      .turno-info span {
-        @apply text-sm;
-      }
-      .turno-actions {
-        @apply mt-4;
       }
     }
   </style>
@@ -165,7 +149,20 @@
       <input type="text" id="search-input" placeholder="Buscar por nombre o fecha..." class="search-input">
     </div>
     <div id="loading" class="spinner hidden"></div>
-    <div id="turnos-list"></div>
+    <div id="turnos-list">
+      <table class="turno-table">
+        <thead>
+          <tr>
+            <th><i class="fas fa-user icon"></i> Nombre</th>
+            <th><i class="fas fa-phone icon"></i> Teléfono</th>
+            <th><i class="fas fa-calendar-alt icon"></i> Fecha</th>
+            <th><i class="fas fa-clock icon"></i> Hora</th>
+            <th><i class="fas fa-trash-alt icon"></i> Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="turnos-table-body"></tbody>
+      </table>
+    </div>
     <p id="no-turnos" class="no-turnos hidden"><i class="fas fa-exclamation-circle icon"></i> No hay turnos reservados.</p>
   </div>
 
@@ -249,10 +246,10 @@
     }
 
     async function cargarTurnos(searchQuery = '') {
-      const lista = document.getElementById("turnos-list");
+      const tableBody = document.getElementById("turnos-table-body");
       const noTurnos = document.getElementById("no-turnos");
       const loading = document.getElementById("loading");
-      lista.innerHTML = "";
+      tableBody.innerHTML = "";
       loading.classList.remove("hidden");
       noTurnos.classList.add("hidden");
 
@@ -281,22 +278,19 @@
         }
 
         datos.forEach(t => {
-          const card = document.createElement("div");
-          card.className = "turno-card animate-slide-in";
-          card.innerHTML = `
-            <div class="turno-info">
-              <span><i class="fas fa-user"></i> <strong>${t.nombre}</strong></span>
-              <span><i class="fas fa-phone"></i> ${t.telefono}</span>
-              <span><i class="fas fa-calendar-alt"></i> ${formatDate(t.fecha)}</span>
-              <span><i class="fas fa-clock"></i> ${formatTime(t.hora)}</span>
-            </div>
-            <div class="turno-actions">
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td><i class="fas fa-user icon"></i> <strong>${t.nombre}</strong></td>
+            <td><i class="fas fa-phone icon"></i> ${t.telefono}</td>
+            <td><i class="fas fa-calendar-alt icon"></i> ${formatDate(t.fecha)}</td>
+            <td><i class="fas fa-clock icon"></i> ${formatTime(t.hora)}</td>
+            <td>
               <button class="delete" onclick="borrarTurno('${t.id}')">
                 <i class="fas fa-trash-alt icon"></i> Eliminar
               </button>
-            </div>
+            </td>
           `;
-          lista.appendChild(card);
+          tableBody.appendChild(row);
         });
       } catch (err) {
         console.error("Error cargando turnos:", err);
