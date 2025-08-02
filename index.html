@@ -125,6 +125,12 @@
       color: #6b7280;
       background-color: #374151;
     }
+    .form-turno label {
+      @apply flex items-center gap-2;
+    }
+    .form-turno i {
+      color: #facc15;
+    }
     @media (max-width: 640px) {
       .form-turno {
         @apply max-w-xs p-6;
@@ -271,15 +277,15 @@
         <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md form-turno" aria-label="Formulario de reserva de turno">
           <form id="reserva-form" onsubmit="reservarTurno(event)">
             <div class="mb-6">
-              <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Nombre:</label>
+              <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-user"></i> Nombre:</label>
               <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
-              <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Teléfono:</label>
+              <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-phone"></i> Teléfono:</label>
               <input type="tel" id="telefono" name="telefono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" placeholder="Ej: 3471511010" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
-              <label for="servicio" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Servicio:</label>
+              <label for="servicio" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-scissors"></i> Servicio:</label>
               <select id="servicio" name="servicio" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 <option value="" disabled selected>Selecciona un servicio</option>
                 <option value="Corte hombre">Corte hombre</option>
@@ -288,13 +294,13 @@
               </select>
             </div>
             <div class="mb-6">
-              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha:</label>
+              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-alt"></i> Fecha:</label>
               <select id="fecha" name="fecha" required aria-required="true" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 <option value="" disabled selected>Selecciona una fecha</option>
               </select>
             </div>
             <div class="mb-6">
-              <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Hora:</label>
+              <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-clock"></i> Hora:</label>
               <select id="hora" name="hora" required aria-required="true" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 <option value="" disabled selected>Selecciona una hora</option>
               </select>
