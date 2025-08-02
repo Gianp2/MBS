@@ -45,6 +45,7 @@
     .nav-link:hover::after {
       width: 100%;
     }
+    /* Mobile menu styles */
     #mobile-menu {
       position: fixed;
       top: 0;
@@ -52,7 +53,7 @@
       height: 100vh;
       width: 75%;
       max-width: 300px;
-      background-color: rgba(31, 41, 55, 0.95);
+      background-color: rgba(31, 41, 55, 0.95); /* Tailwind gray-800 with opacity */
       transition: transform 0.3s ease-in-out;
       transform: translateX(100%);
       box-shadow: -4px 0 10px rgba(0, 0, 0, 0.3);
@@ -67,20 +68,21 @@
       font-size: 1.1rem;
       font-weight: 500;
       text-align: center;
-      color: #e5e7eb;
+      color: #e5e7eb; /* Tailwind gray-200 */
       transition: background-color 0.2s ease, color 0.2s ease;
     }
     #mobile-menu a:hover {
-      background-color: #4b5563;
-      color: #facc15;
+      background-color: #4b5563; /* Tailwind gray-600 */
+      color: #facc15; /* Tailwind yellow-400 */
     }
+    /* Floating reserve button for mobile */
     .floating-reserve-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 100;
-      background-color: #facc15;
-      color: #1f2937;
+      background-color: #facc15; /* Tailwind yellow-400 */
+      color: #1f2937; /* Tailwind gray-900 */
       padding: 12px 20px;
       border-radius: 50px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -91,7 +93,7 @@
       transition: transform 0.3s ease, background-color 0.3s ease;
     }
     .floating-reserve-button:hover {
-      background-color: #eab308;
+      background-color: #eab308; /* Tailwind yellow-500 */
       transform: scale(1.05);
     }
     .floating-reserve-button img {
@@ -102,6 +104,27 @@
       .floating-reserve-button {
         display: none;
       }
+    }
+    /* Admin button specific styles */
+    .nav-link.admin {
+      background-color: #facc15; /* Tailwind yellow-400 */
+      color: #1f2937; /* Tailwind gray-900 */
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .nav-link.admin:hover {
+      background-color: #eab308; /* Tailwind yellow-500 */
+      color: #1f2937;
+      transform: scale(1.05);
+    }
+    .nav-link.admin::after {
+      display: none; /* Remove underline effect for admin button */
+    }
+    #mobile-menu a.nav-link.admin {
+      margin: 0.5rem 1rem;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -121,6 +144,7 @@
         <a href="#turnos" class="nav-link font-medium font-['Poppins']">Reserva</a>
         <a href="#pagos" class="nav-link font-medium font-['Poppins']">Pagos</a>
         <a href="#contacto" class="nav-link font-medium font-['Poppins']">Contacto</a>
+        <a href="admin.html" class="nav-link admin font-medium font-['Poppins']"><i class="fas fa-user-shield mr-2"></i>Admin</a>
       </nav>
       <button class="md:hidden menu-toggle" aria-label="Abrir menú móvil">
         <i class="fas fa-bars text-2xl"></i>
@@ -133,6 +157,7 @@
       <a href="#turnos" class="nav-link font-['Poppins']">Reserva</a>
       <a href="#pagos" class="nav-link font-['Poppins']">Pagos</a>
       <a href="#contacto" class="nav-link font-['Poppins']">Contacto</a>
+      <a href="admin.html" class="nav-link admin font-['Poppins']"><i class="fas fa-user-shield mr-2"></i>Admin</a>
     </nav>
   </header>
 
@@ -209,7 +234,7 @@
 
     <section id="servicios" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
       <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Nuestros Servicios</h2>
+        <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins']">Nuestros Servicios</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div class="service-item text-center p-8 bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
             <i class="fas fa-scissors text-5xl text-yellow-400 mb-4"></i>
@@ -234,28 +259,30 @@
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Reservar Turno</h2>
         <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md" aria-label="Formulario de reserva de turno">
-          <form id="form-turnos">
+          <form id="reserva-form" onsubmit="enviarWhatsApp(event)">
             <div class="mb-6">
               <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Nombre:</label>
-              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
               <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Teléfono:</label>
-              <input type="tel" id="telefono" name="telefono" placeholder="Tu teléfono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <input type="tel" id="telefono" name="telefono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" placeholder="Ej: 3471511010" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
-              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha:</label>
-              <input type="date" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            </div>
-            <div class="mb-6">
-              <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Hora:</label>
-              <select id="hora" name="hora" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                <option value="" disabled selected>Selecciona un horario</option>
+              <label for="servicio" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Servicio:</label>
+              <select id="servicio" name="servicio" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <option value="" disabled selected>Selecciona un servicio</option>
+                <option value="Corte hombre">Corte hombre</option>
+                <option value="Corte + barba">Corte + barba</option>
+                <option value="Color">Color</option>
               </select>
             </div>
-            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar</button>
+            <div class="mb-6">
+              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha y hora:</label>
+              <input type="datetime-local" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            </div>
+            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar vía WhatsApp</button>
           </form>
-          <p id="mensaje" class="text-center mt-4 text-gray-200"></p>
         </div>
       </div>
     </section>
@@ -266,8 +293,11 @@
           <h2 class="text-4xl font-bold font-['Poppins'] text-gray-200">Pagá con un clic</h2>
           <img src="img/logopago.png" alt="Logo de Pago" class="h-12 w-auto ml-4">
         </div>
-        <p class="mb-6 text-lg text-gray-300">Alias: <strong id="alias-text">mbs.barber.studio</strong></p>
+        <p class="mb-6 text-lg text-gray-300">Alias: <strong id="alias-text">ulisesiglesias.mbs</strong></p>
         <button onclick="copiarAlias()" class="copy-button bg-yellow-400 text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-yellow-500 transition-colors font-['Poppins']"><i class="fas fa-copy mr-2"></i> Copiar alias</button>
+        <a href="https://link.mercadopago.com.ar/pasqui11" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors font-['Poppins'] mt-4">
+          <img src="img/logomp.png" alt="Mercado Pago" class="inline-block h-6 w-auto mr-2"> Pagar con Mercado Pago
+        </a>
         <p class="mt-6 text-lg text-gray-300"><a href="https://wa.me/+5493471511010?text=Hola,+te+env%C3%ADo+el+comprobante+de+mi+turno" target="_blank" class="text-yellow-400 hover:underline"><i class="fab fa-whatsapp mr-2"></i> Enviar comprobante por WhatsApp</a></p>
       </div>
     </section>
@@ -305,6 +335,7 @@
     </div>
   </footer>
 
+  <!-- Floating Reserve Button -->
   <a href="#turnos" class="floating-reserve-button" aria-label="Reservar Turno">
     <img src="img/logoreserva.png" alt="Ícono de reserva">
     <span class="font-['Poppins']">Reservar Turno</span>
@@ -324,6 +355,22 @@
       });
     }
 
+    function enviarWhatsApp(event) {
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const servicio = document.getElementById('servicio').value;
+      const fechaInput = document.getElementById('fecha').value;
+      const fecha = new Date(fechaInput);
+      const fechaFormateada = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const horaFormateada = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const mensaje = `Hola, quiero reservar un turno:\nNombre: ${nombre}\nServicio: ${servicio}\nFecha: ${fechaFormateada}\nHora: ${horaFormateada}`;
+      const numeroWhatsApp = '5493471511010';
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+      window.open(urlWhatsApp, '_blank');
+    }
+
+    // Menú móvil
     const menuToggle = document.querySelector('.menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     menuToggle.addEventListener('click', () => {
@@ -332,6 +379,7 @@
       menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
     });
 
+    // Cerrar menú al hacer clic en un enlace
     document.querySelectorAll('#mobile-menu a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
@@ -340,6 +388,7 @@
       });
     });
 
+    // Smooth scroll para anclas con ajuste de posición
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -352,88 +401,6 @@
           behavior: 'smooth'
         });
       });
-    });
-
-    const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd";
-
-    function generarHorarios() {
-      const horarios = [];
-      const inicio = 9;
-      const fin = 18;
-      for (let h = inicio; h < fin; h++) {
-        horarios.push(`${String(h).padStart(2, "0")}:00`);
-        horarios.push(`${String(h).padStart(2, "0")}:30`);
-      }
-      return horarios;
-    }
-
-    async function cargarHorariosDisponibles(fecha) {
-      const horaSelect = document.getElementById("hora");
-      horaSelect.innerHTML = `<option value="" disabled selected>Selecciona un horario</option>`;
-
-      try {
-        const res = await fetch(`${API_URL}/search?fecha=${fecha}`);
-        const datos = await res.json();
-        const ocupados = datos.map(t => t.hora);
-
-        generarHorarios().forEach(hora => {
-          if (!ocupados.includes(hora)) {
-            const opt = document.createElement("option");
-            opt.value = hora;
-            opt.textContent = hora;
-            horaSelect.appendChild(opt);
-          }
-        });
-      } catch (err) {
-        console.error("Error cargando horarios:", err);
-      }
-    }
-
-    document.getElementById("fecha").addEventListener("change", e => {
-      cargarHorariosDisponibles(e.target.value);
-    });
-
-    document.getElementById("form-turnos").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const fecha = form.fecha.value;
-      const hora = form.hora.value;
-
-      try {
-        const res = await fetch(`${API_URL}/search?fecha=${fecha}&hora=${hora}`);
-        const datos = await res.json();
-
-        if (datos.length > 0) {
-          document.getElementById("mensaje").textContent = "❌ Este horario ya está reservado. Por favor, elige otro.";
-          return;
-        }
-
-        const data = {
-          data: [{
-            nombre: form.nombre.value,
-            telefono: form.telefono.value,
-            fecha: form.fecha.value,
-            hora: form.hora.value
-          }]
-        };
-
-        const postRes = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        if (postRes.ok) {
-          document.getElementById("mensaje").textContent = "✅ Turno reservado con éxito.";
-          form.reset();
-          document.getElementById("hora").innerHTML = `<option value="" disabled selected>Selecciona un horario</option>`;
-        } else {
-          document.getElementById("mensaje").textContent = "❌ Error al reservar el turno.";
-        }
-      } catch (err) {
-        document.getElementById("mensaje").textContent = "⚠ Ocurrió un error.";
-        console.error(err);
-      }
     });
   </script>
 </body>
