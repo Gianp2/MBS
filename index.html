@@ -251,7 +251,9 @@
             </div>
             <div class="mb-6">
               <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Hora:</label>
-              <input type="time" id="hora" name="hora" required aria-required="true" step="1800" min="09:00" max="20:00" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <select id="hora" name="hora" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <option value="" disabled selected>Selecciona un horario</option>
+              </select>
             </div>
             <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar</button>
           </form>
@@ -358,11 +360,54 @@
       });
     });
 
-    // SheetDB form submission
-    document.getElementById("form-turnos").addEventListener("submit", function(e) {
-      e.preventDefault();
+    // SheetDB form submission and available time slots
+    const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd";
 
+    // Generar lista de horarios de 30 min (ej. 09:00 a 18:00)
+    function generarHorarios() {
+      const horarios = [];
+      const inicio = 9; // hora inicio
+      const fin = 18;   // hora fin
+      for (let h = inicio; h < fin; h++) {
+        horarios.push(`${String(h).padStart(2, "0")}:00`);
+        horarios.push(`${String(h).padStart(2, "0")}:30`);
+      }
+      return horarios;
+    }
+
+    // Cargar horarios disponibles según la fecha
+    async function cargarHorariosDisponibles(fecha) {
+      const horaSelect = document.getElementById("hora");
+      horaSelect.innerHTML = `<option value="" disabled selected>Selecciona un horario</option>`;
+
+      try {
+        const res = await fetch(`${API_URL}/search?fecha=${fecha}`);
+        const datos = await res.json();
+        const ocupados = datos.map(t => t.hora);
+
+        generarHorarios().forEach(hora => {
+          if (!ocupados.includes(hora)) {
+            const opt = document.createElement("option");
+            opt.value = hora;
+            opt.textContent = hora;
+            horaSelect.appendChild(opt);
+          }
+        });
+      } catch (err) {
+        console.error("Error cargando horarios:", err);
+      }
+    }
+
+    // Evento: cuando cambia la fecha, cargar horarios libres
+    document.getElementById("fecha").addEventListener("change", e => {
+      cargarHorariosDisponibles(e.target.value);
+    });
+
+    // Guardar turno en SheetDB
+    document.getElementById("form-turnos").addEventListener("submit", async function(e) {
+      e.preventDefault();
       const form = e.target;
+
       const data = {
         data: [{
           nombre: form.nombre.value,
@@ -372,23 +417,24 @@
         }]
       };
 
-      fetch("https://sheetdb.io/api/v1/skasggl9p5fkd", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if(response.ok) {
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
           document.getElementById("mensaje").textContent = "✅ Turno reservado con éxito.";
           form.reset();
+          document.getElementById("hora").innerHTML = `<option value="" disabled selected>Selecciona un horario</option>`;
         } else {
           document.getElementById("mensaje").textContent = "❌ Error al reservar el turno.";
         }
-      })
-      .catch(err => {
+      } catch (err) {
         document.getElementById("mensaje").textContent = "⚠ Ocurrió un error.";
         console.error(err);
-      });
+      }
     });
   </script>
 </body>
