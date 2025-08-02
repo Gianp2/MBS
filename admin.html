@@ -18,36 +18,50 @@
       align-items: center;
       justify-content: center;
       padding: 1rem;
+      overflow-x: hidden;
     }
     .login-container {
       @apply max-w-xs w-full bg-gradient-to-b from-gray-900 to-gray-850 p-8 rounded-3xl shadow-lg border border-yellow-400/20 transform transition-all duration-300 flex flex-col items-center;
     }
     .table-container {
-      @apply max-w-full w-full bg-gray-800 p-6 rounded-2xl shadow-2xl mt-6;
+      @apply max-w-xs w-full bg-gray-850 p-4 rounded-3xl shadow-2xl mt-6;
     }
-    table {
-      @apply w-full border-collapse;
+    .turno-card {
+      background-color: #1f2937;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255, 215, 0, 0.2);
     }
-    th, td {
-      @apply px-4 py-3 border-b border-gray-600 text-gray-200 text-center;
+    .turno-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
     }
-    th {
-      @apply bg-gray-700 font-semibold text-gray-100 uppercase text-xs tracking-wider;
+    .turno-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #e5e7eb;
+      font-size: 0.95rem;
     }
-    tr {
-      @apply transition-colors duration-200;
+    .turno-info span i {
+      color: #facc15;
     }
-    tr:hover {
-      @apply bg-gray-700/50;
+    .turno-actions {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: flex-end;
     }
     .delete {
-      @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all shadow-md flex items-center justify-center gap-2 mx-auto;
+      @apply bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-1.5 rounded-lg hover:bg-red-800 transition-all shadow-md flex items-center justify-center gap-1.5 mx-auto text-sm;
     }
     input, select {
-      @apply w-full p-3 rounded-xl border border-gray-600 bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all shadow-inner;
+      @apply w-full p-2 rounded-xl border border-gray-600 bg-gray-900 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all shadow-inner text-sm;
     }
     button:not(.delete):not(.back) {
-      @apply bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-semibold px-8 py-3 rounded-xl hover:bg-yellow-700 hover:scale-102 transition-all shadow-lg flex items-center justify-center gap-2 mx-auto text-base;
+      @apply bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-semibold px-6 py-2 rounded-xl hover:bg-yellow-700 hover:scale-102 transition-all shadow-lg flex items-center justify-center gap-2 mx-auto text-base;
     }
     .back {
       @apply bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg hover:bg-gray-500 hover:scale-102 transition-all shadow-md flex items-center gap-2 mx-auto mt-4;
@@ -56,7 +70,7 @@
       @apply text-3xl font-bold text-center text-gray-100 mb-4 flex items-center justify-center gap-2;
     }
     h2 {
-      @apply text-xl font-semibold text-gray-100 mb-4 text-center;
+      @apply text-2xl font-semibold text-gray-100 mb-6 text-center flex items-center justify-center gap-2;
     }
     h3 {
       @apply text-xl font-semibold text-gray-100 mb-6 flex items-center justify-center gap-2;
@@ -69,13 +83,13 @@
       100% { opacity: 1; transform: translateY(0); }
     }
     .icon {
-      @apply text-base;
+      @apply text-sm;
     }
     .spinner {
-      @apply border-4 border-t-yellow-400 border-gray-600 rounded-full w-5 h-5 animate-spin mx-auto;
+      @apply border-4 border-t-yellow-400 border-gray-600 rounded-full w-6 h-6 animate-spin mx-auto;
     }
     .no-turnos {
-      @apply text-center text-gray-400 py-6;
+      @apply text-center text-gray-300 py-6 text-base flex items-center justify-center gap-2;
     }
     .password-container {
       @apply relative w-full;
@@ -83,15 +97,27 @@
     .toggle-password {
       @apply absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400 cursor-pointer text-base;
     }
-    .logo-container {
-      @apply flex justify-center mb-4;
+    .search-container {
+      @apply relative w-full max-w-full mb-6;
+    }
+    .search-icon {
+      @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm;
+    }
+    .search-input {
+      @apply pl-10;
     }
     @media (max-width: 640px) {
       .login-container {
         @apply max-w-xs p-6;
       }
+      .table-container {
+        @apply max-w-xs p-4;
+      }
       h1 {
         @apply text-2xl;
+      }
+      h2 {
+        @apply text-xl;
       }
       .logo-container img {
         @apply h-16;
@@ -99,28 +125,15 @@
       button:not(.delete):not(.back) {
         @apply px-6 py-2 text-base;
       }
-      table, thead, tbody, th, td, tr {
-        @apply block;
+      .turno-card {
+        @apply p-3 mb-4 text-sm;
       }
-      thead tr {
-        @apply hidden;
+      .turno-info span {
+        @apply text-sm;
       }
-      tr {
-        @apply mb-4 border-b border-gray-600;
+      .turno-actions {
+        @apply mt-4;
       }
-      td {
-        @apply block text-left px-4 py-2 relative;
-      }
-      td:before {
-        @apply content-attr-data-label font-semibold text-yellow-400 mr-2;
-        display: inline-block;
-        width: 90px;
-      }
-      td:nth-child(1):before { content: "Nombre"; }
-      td:nth-child(2):before { content: "Teléfono"; }
-      td:nth-child(3):before { content: "Fecha"; }
-      td:nth-child(4):before { content: "Hora"; }
-      td:nth-child(5):before { content: "Acción"; }
     }
   </style>
 </head>
@@ -136,81 +149,62 @@
       <input type="password" id="admin-password" placeholder="Clave" class="pr-10">
       <i class="fas fa-eye toggle-password" id="toggle-password"></i>
     </div>
-<button onclick="login()" class="btn btn-primary" aria-label="Iniciar sesión">
-  <i class="fas fa-sign-in-alt icon" aria-hidden="true"></i> Iniciar sesión
-</button>
-<a href="index.html" class="btn btn-secondary" aria-label="Volver a la página principal">
-  <i class="fas fa-arrow-left icon" aria-hidden="true"></i> Volver
-</a>
-
-<style>
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #545b62;
-  transform: translateY(-2px);
-}
-
-.icon {
-  font-size: 14px;
-}
-
-@media (max-width: 480px) {
-  .btn {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-}
-</style>
+    <button onclick="login()" class="btn btn-primary" aria-label="Iniciar sesión">
+      <i class="fas fa-sign-in-alt icon" aria-hidden="true"></i> Iniciar sesión
+    </button>
+    <a href="index.html" class="btn btn-secondary" aria-label="Volver a la página principal">
+      <i class="fas fa-arrow-left icon" aria-hidden="true"></i> Volver
+    </a>
   </div>
 
   <div id="admin-section" style="display:none;" class="table-container animate-slide-in">
-    <h2>Turnos Reservados</h2>
-    <div class="mb-6 flex justify-center">
-      <input type="text" id="search-input" placeholder="Buscar por nombre o fecha..." class="max-w-md">
+    <h2><i class="fas fa-calendar-alt icon text-yellow-400"></i> Turnos Reservados</h2>
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="search-input" placeholder="Buscar por nombre o fecha..." class="search-input">
     </div>
     <div id="loading" class="spinner hidden"></div>
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Teléfono</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody id="turnos-list"></tbody>
-    </table>
-    <p id="no-turnos" class="no-turnos hidden">No hay turnos reservados.</p>
+    <div id="turnos-list"></div>
+    <p id="no-turnos" class="no-turnos hidden"><i class="fas fa-exclamation-circle icon"></i> No hay turnos reservados.</p>
   </div>
+
+  <style>
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #545b62;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 480px) {
+      .btn {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+    }
+  </style>
 
   <script>
     const API_URL = "https://sheetdb.io/api/v1/skasggl9p5fkd";
@@ -280,16 +274,23 @@
           return;
         }
 
-        datos.forEach((t, i) => {
-          const fila = document.createElement("tr");
-          fila.innerHTML = `
-            <td data-label="Nombre">${t.nombre}</td>
-            <td data-label="Teléfono">${t.telefono}</td>
-            <td data-label="Fecha">${formatDate(t.fecha)}</td>
-            <td data-label="Hora">${formatTime(t.hora)}</td>
-            <td data-label="Acción"><button class="delete" onclick="eliminarTurno('${t.id}')"><i class="fas fa-trash-alt icon"></i> Eliminar</button></td>
+        datos.forEach(t => {
+          const card = document.createElement("div");
+          card.className = "turno-card animate-slide-in";
+          card.innerHTML = `
+            <div class="turno-info">
+              <span><i class="fas fa-user"></i> <strong>${t.nombre}</strong></span>
+              <span><i class="fas fa-phone"></i> ${t.telefono}</span>
+              <span><i class="fas fa-calendar-alt"></i> ${formatDate(t.fecha)}</span>
+              <span><i class="fas fa-clock"></i> ${formatTime(t.hora)}</span>
+            </div>
+            <div class="turno-actions">
+              <button class="delete" onclick="eliminarTurno('${t.id}')">
+                <i class="fas fa-trash-alt icon"></i> Eliminar
+              </button>
+            </div>
           `;
-          lista.appendChild(fila);
+          lista.appendChild(card);
         });
       } catch (err) {
         console.error("Error cargando turnos:", err);
@@ -338,4 +339,3 @@
   </script>
 </body>
 </html>
-
