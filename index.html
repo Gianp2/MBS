@@ -236,30 +236,26 @@
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Reservar Turno</h2>
         <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md" aria-label="Formulario de reserva de turno">
-          <form id="reserva-form" onsubmit="enviarWhatsApp(event)">
+          <form id="form-turnos">
             <div class="mb-6">
               <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Nombre:</label>
-              <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
               <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Teléfono:</label>
-              <input type="tel" id="telefono" name="telefono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" placeholder="Ej: 3471511010" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <input type="tel" id="telefono" name="telefono" placeholder="Tu teléfono" required aria-required="true" pattern="[0-9]{10,}" title="Ingrese un número de teléfono válido" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
-              <label for="servicio" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Servicio:</label>
-              <select id="servicio" name="servicio" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                <option value="" disabled selected>Selecciona un servicio</option>
-                <option value="Corte hombre">Corte hombre</option>
-                <option value="Corte + barba">Corte + barba</option>
-                <option value="Color">Color</option>
-              </select>
+              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha:</label>
+              <input type="date" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
-              <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Fecha y hora:</label>
-              <input type="datetime-local" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Hora:</label>
+              <input type="time" id="hora" name="hora" required aria-required="true" step="1800" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
-            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar vía WhatsApp</button>
+            <button type="submit" class="w-full bg-yellow-400 text-gray-900 font-semibold py-4 rounded-lg hover:bg-yellow-500 transition-colors text-lg font-['Poppins']">Reservar</button>
           </form>
+          <p id="mensaje" class="text-center mt-4 text-gray-200"></p>
         </div>
       </div>
     </section>
@@ -270,11 +266,8 @@
           <h2 class="text-4xl font-bold font-['Poppins'] text-gray-200">Pagá con un clic</h2>
           <img src="img/logopago.png" alt="Logo de Pago" class="h-12 w-auto ml-4">
         </div>
-        <p class="mb-6 text-lg text-gray-300">Alias: <strong id="alias-text">ulisesiglesias.mbs</strong></p>
+        <p class="mb-6 text-lg text-gray-300">Alias: <strong id="alias-text">mbs.barber.studio</strong></p>
         <button onclick="copiarAlias()" class="copy-button bg-yellow-400 text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-yellow-500 transition-colors font-['Poppins']"><i class="fas fa-copy mr-2"></i> Copiar alias</button>
-          <a href="https://link.mercadopago.com.ar/pasqui11" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors font-['Poppins'] mt-4">
-          <img src="img/logomp.png" alt="Mercado Pago" class="inline-block h-6 w-auto mr-2"> Pagar con Mercado Pago
-        </a>
         <p class="mt-6 text-lg text-gray-300"><a href="https://wa.me/+5493471511010?text=Hola,+te+env%C3%ADo+el+comprobante+de+mi+turno" target="_blank" class="text-yellow-400 hover:underline"><i class="fab fa-whatsapp mr-2"></i> Enviar comprobante por WhatsApp</a></p>
       </div>
     </section>
@@ -332,21 +325,6 @@
       });
     }
 
-    function enviarWhatsApp(event) {
-      event.preventDefault();
-      const nombre = document.getElementById('nombre').value;
-      const servicio = document.getElementById('servicio').value;
-      const fechaInput = document.getElementById('fecha').value;
-      const fecha = new Date(fechaInput);
-      const fechaFormateada = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const horaFormateada = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      const mensaje = `Hola, quiero reservar un turno:\nNombre: ${nombre}\nServicio: ${servicio}\nFecha: ${fechaFormateada}\nHora: ${horaFormateada}`;
-      const numeroWhatsApp = '5493471511010';
-      const mensajeCodificado = encodeURIComponent(mensaje);
-      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
-      window.open(urlWhatsApp, '_blank');
-    }
-
     // Menú móvil
     const menuToggle = document.querySelector('.menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -377,6 +355,39 @@
           top: targetPosition,
           behavior: 'smooth'
         });
+      });
+    });
+
+    // SheetDB form submission
+    document.getElementById("form-turnos").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const data = {
+        data: [{
+          nombre: form.nombre.value,
+          telefono: form.telefono.value,
+          fecha: form.fecha.value,
+          hora: form.hora.value
+        }]
+      };
+
+      fetch("https://sheetdb.io/api/v1/skasggl9p5fkd", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if(response.ok) {
+          document.getElementById("mensaje").textContent = "✅ Turno reservado con éxito.";
+          form.reset();
+        } else {
+          document.getElementById("mensaje").textContent = "❌ Error al reservar el turno.";
+        }
+      })
+      .catch(err => {
+        document.getElementById("mensaje").textContent = "⚠ Ocurrió un error.";
+        console.error(err);
       });
     });
   </script>
