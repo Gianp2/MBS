@@ -14,6 +14,7 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     section {
@@ -118,7 +119,7 @@
       margin: 0.5rem 1rem;
       border-radius: 8px;
     }
-    .form-turno select {
+    .form-turno input, .form-turno select {
       @apply w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm;
     }
     .form-turno option:disabled {
@@ -130,6 +131,9 @@
     }
     .form-turno i {
       color: #facc15;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(30deg) brightness(100%);
     }
     @media (max-width: 640px) {
       .form-turno {
@@ -295,9 +299,7 @@
             </div>
             <div class="mb-6">
               <label for="fecha" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-alt"></i> Fecha:</label>
-              <select id="fecha" name="fecha" required aria-required="true" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                <option value="" disabled selected>Selecciona una fecha</option>
-              </select>
+              <input type="date" id="fecha" name="fecha" required aria-required="true" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
               <label for="hora" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-clock"></i> Hora:</label>
@@ -377,12 +379,24 @@
         }, 2000);
       }).catch(err => {
         console.error('Error al copiar alias:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo copiar el alias. Inténtalo de nuevo.',
+          confirmButtonColor: '#facc15'
+        });
       });
     }
 
     function formatDate(dateStr) {
-      const [month, day, year] = dateStr.split('/');
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
       return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+    }
+
+    function parseDate(dateStr) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
     }
 
     function formatTime(timeStr) {
@@ -433,9 +447,9 @@
     }
 
     async function updateTimeSlots() {
-      const fechaSelect = document.getElementById('fecha');
+      const fechaInput = document.getElementById('fecha');
       const horaSelect = document.getElementById('hora');
-      const selectedDate = fechaSelect.value;
+      const selectedDate = fechaInput.value;
       horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
 
       if (!selectedDate) {
@@ -467,7 +481,12 @@
         horaSelect.disabled = false;
       } catch (err) {
         console.error('Error cargando horarios:', err);
-        alert('Error al cargar los horarios disponibles. Inténtalo de nuevo.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los horarios disponibles. Inténtalo de nuevo.',
+          confirmButtonColor: '#facc15'
+        });
       }
     }
 
@@ -480,7 +499,12 @@
       const hora = document.getElementById('hora').value;
 
       if (!fecha || !hora) {
-        alert('Por favor, selecciona una fecha y hora válidas.');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Faltan datos',
+          text: 'Por favor, selecciona una fecha y hora válidas.',
+          confirmButtonColor: '#facc15'
+        });
         return;
       }
 
@@ -493,7 +517,12 @@
         );
 
         if (isOccupied) {
-          alert('El turno seleccionado ya está ocupado. Por favor, elige otro horario.');
+          Swal.fire({
+            icon: 'warning',
+            title: 'Horario ocupado',
+            text: 'El turno seleccionado ya está ocupado. Por favor, elige otro horario.',
+            confirmButtonColor: '#facc15'
+          });
           return;
         }
 
@@ -510,34 +539,61 @@
         });
 
         if (response.ok) {
-          alert('Turno reservado con éxito.');
+          Swal.fire({
+            icon: 'success',
+            title: 'Turno reservado',
+            text: 'Tu turno ha sido reservado con éxito.',
+            timer: 2000,
+            showConfirmButton: false
+          });
           document.getElementById('reserva-form').reset();
           document.getElementById('fecha').value = '';
           document.getElementById('hora').innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
           document.getElementById('hora').disabled = true;
         } else {
-          alert('Error al reservar el turno. Inténtalo de nuevo.');
+          throw new Error('Error al reservar');
         }
       } catch (err) {
         console.error('Error reservando turno:', err);
-        alert('Error al reservar el turno. Inténtalo de nuevo.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo reservar el turno. Inténtalo de nuevo.',
+          confirmButtonColor: '#facc15'
+        });
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const fechaSelect = document.getElementById('fecha');
+      const fechaInput = document.getElementById('fecha');
       const horaSelect = document.getElementById('hora');
-      const workingDays = getNextWorkingDays(30);
+      const today = new Date();
+      const minDate = new Date(today);
+      minDate.setDate(today.getDate() + 1);
+      const maxDate = new Date(today);
+      maxDate.setDate(today.getDate() + 30);
 
-      workingDays.forEach(day => {
-        const formattedDate = `${day.getMonth() + 1}/${day.getDate()}/${day.getFullYear()}`;
-        const option = document.createElement('option');
-        option.value = formattedDate;
-        option.textContent = formatDate(formattedDate);
-        fechaSelect.appendChild(option);
+      fechaInput.min = minDate.toISOString().split('T')[0];
+      fechaInput.max = maxDate.toISOString().split('T')[0];
+
+      fechaInput.addEventListener('change', (e) => {
+        const selectedDate = parseDate(e.target.value);
+        const dayOfWeek = selectedDate.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 1) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Día no laborable',
+            text: 'Solo se pueden reservar turnos de martes a sábado.',
+            confirmButtonColor: '#facc15'
+          });
+          e.target.value = '';
+          horaSelect.disabled = true;
+          horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+          return;
+        }
+        updateTimeSlots();
       });
 
-      fechaSelect.addEventListener('change', updateTimeSlots);
       horaSelect.disabled = true;
     });
 
