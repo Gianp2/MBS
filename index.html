@@ -11,7 +11,7 @@
   <meta property="og:image" content="img/logomonkey.png">
   <meta property="og:url" content="https://www.mbsbarberstudio.com">
   <title>MBS Barber Studio</title>
-  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="img/logomonkey.png" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -135,7 +135,7 @@
     input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(30deg) brightness(100%);
     }
-    @media (max-width: 640px) {
+    @media (max-inline-size: 640px) {
       .form-turno {
         @apply max-w-xs p-6;
       }
@@ -154,46 +154,40 @@
       z-index: 1000;
       justify-content: center;
       align-items: center;
-      overflow-y: auto;
     }
     #admin-modal.active {
       display: flex;
     }
     #admin-modal .modal-content {
       background-color: #1f2937;
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: 12px;
-      max-width: 95%;
-      width: 100%;
-      max-height: 90vh;
+      max-width: 900px;
+      width: 95%;
+      max-height: 85vh;
       overflow-y: auto;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
     #admin-modal .action-bar {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      justify-content: center;
     }
     #admin-modal .action-bar button {
       background-color: #facc15;
       color: #1f2937;
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
       font-family: 'Poppins', sans-serif;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      min-width: 120px;
-      touch-action: manipulation;
     }
     #admin-modal .action-bar button:hover {
       background-color: #eab308;
       transform: scale(1.05);
-    }
-    #admin-modal .fecha-generar-container {
-      width: 100%;
-      margin-bottom: 1rem;
     }
     #admin-modal table {
       width: 100%;
@@ -201,14 +195,11 @@
       border-spacing: 0;
       color: #e5e7eb;
       font-family: 'Open Sans', sans-serif;
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
     }
     #admin-modal th, #admin-modal td {
-      padding: 0.5rem;
+      padding: 0.75rem;
       text-align: left;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       border-bottom: 1px solid #4b5563;
     }
     #admin-modal th {
@@ -226,16 +217,11 @@
       background-color: #4b5563;
       transition: background-color 0.2s ease;
     }
-    #admin-modal .toggle-disponible,
-    #admin-modal .edit-turno,
-    #admin-modal .delete-turno {
-      padding: 0.5rem;
+    #admin-modal .toggle-disponible {
+      padding: 0.5rem 1rem;
       border-radius: 6px;
-      font-size: 0.8rem;
-      min-width: 80px;
-      margin: 0.25rem;
+      font-size: 0.85rem;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      touch-action: manipulation;
     }
     #admin-modal .toggle-disponible.disponible {
       background-color: #10b981;
@@ -257,6 +243,11 @@
     #admin-modal .edit-turno {
       background-color: #3b82f6;
       color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-left: 0.5rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
     #admin-modal .edit-turno:hover {
       background-color: #2563eb;
@@ -265,6 +256,11 @@
     #admin-modal .delete-turno {
       background-color: #dc2626;
       color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-left: 0.5rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
     #admin-modal .delete-turno:hover {
       background-color: #b91c1c;
@@ -280,83 +276,16 @@
     #admin-modal .close-modal {
       background-color: #e3342f;
       color: white;
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
       font-family: 'Poppins', sans-serif;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      width: 100%;
       margin-top: 1rem;
-      touch-action: manipulation;
     }
     #admin-modal .close-modal:hover {
       background-color: #c53030;
       transform: scale(1.05);
-    }
-    /* Mobile-specific styles */
-    @media (max-width: 640px) {
-      #admin-modal .modal-content {
-        padding: 0.5rem;
-        max-height: 95vh;
-      }
-      #admin-modal .action-bar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      #admin-modal .action-bar button {
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 0.9rem;
-      }
-      #admin-modal .fecha-generar-container {
-        padding: 0.5rem;
-      }
-      #admin-modal .fecha-generar-container input {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-      }
-      #admin-modal table {
-        display: none; /* Hide table on mobile */
-      }
-      #admin-modal .turnos-mobile {
-        display: block;
-      }
-      #admin-modal .turno-card {
-        background-color: #2d3748;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-      #admin-modal .turno-card:nth-child(even) {
-        background-color: #374151;
-      }
-      #admin-modal .turno-card:hover {
-        background-color: #4b5563;
-        transition: background-color 0.2s ease;
-      }
-      #admin-modal .turno-card p {
-        margin: 0.5rem 0;
-        font-size: 0.9rem;
-        color: #e5e7eb;
-      }
-      #admin-modal .turno-card .turno-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.75rem;
-      }
-      #admin-modal .turno-card .turno-actions button {
-        flex: 1;
-        min-width: 100px;
-        padding: 0.5rem;
-        font-size: 0.85rem;
-      }
-    }
-    @media (min-width: 641px) {
-      #admin-modal .turnos-mobile {
-        display: none;
-      }
     }
   </style>
 </head>
@@ -558,7 +487,7 @@
           <button id="exportTurnos" class="font-['Poppins']"><i class="fas fa-download mr-2"></i>Exportar Turnos</button>
           <button id="importTurnos" class="font-['Poppins']"><i class="fas fa-upload mr-2"></i>Importar Turnos</button>
         </div>
-        <div class="fecha-generar-container">
+        <div class="mb-4">
           <label for="fechaGenerar" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-alt"></i> Seleccionar Fecha para Generar Turnos:</label>
           <input type="date" id="fechaGenerar" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
         </div>
@@ -575,7 +504,6 @@
           </thead>
           <tbody id="listaTurnosAdmin"></tbody>
         </table>
-        <div class="turnos-mobile" id="turnos-mobile"></div>
         <div class="action-bar">
           <button class="close-modal">Cerrar</button>
         </div>
@@ -603,33 +531,16 @@
     <span class="font-['Poppins']">Reservar Turno</span>
   </a>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  <script>
+    const ADMIN_PASSWORD = "admin123"; // Cambia esta contraseña según sea necesario
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD0dfRMXPv35Qpe54P3xezjt4OAACM9Flc",
-      authDomain: "peluqueriambs.firebaseapp.com",
-      projectId: "peluqueriambs",
-      storageBucket: "peluqueriambs.firebasestorage.app",
-      messagingSenderId: "687777736494",
-      appId: "1:687777736494:web:e2ea7be639eaafee2a3cbf",
-      measurementId: "G-XKS6MYTM3L"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Admin password
-    const ADMIN_PASSWORD = "admin123";
+    // Días: martes (2) a sábado (6)
+    const diasHabilitados = [2, 3, 4, 5, 6];
 
     // Horarios
     const horariosManana = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00"];
     const horariosTarde = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
     const horarios = [...horariosManana, ...horariosTarde];
-    const diasHabilitados = [2, 3, 4, 5, 6];
 
     // Parsear fecha desde DD/MM/YYYY o YYYY-MM-DD a Date
     function parseDMY(dateStr) {
@@ -668,52 +579,27 @@
       return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     }
 
-    // Obtener turnos desde Firestore
-    async function getTurnos() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "turnos"));
-        const turnos = [];
-        querySnapshot.forEach((doc) => {
-          turnos.push({ id: doc.id, ...doc.data() });
-        });
-        return turnos;
-      } catch (error) {
-        console.error("Error al obtener turnos: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudieron cargar los turnos. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
-        return [];
-      }
+    // Obtener turnos desde localStorage
+    function getTurnos() {
+      const turnos = localStorage.getItem("turnos");
+      return turnos ? JSON.parse(turnos) : [];
     }
 
-    // Guardar turno en Firestore
-    async function saveTurno(turno) {
-      try {
-        await setDoc(doc(db, "turnos", turno.id), turno);
-      } catch (error) {
-        console.error("Error al guardar turno: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo guardar el turno. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
-      }
+    // Guardar turnos en localStorage
+    function saveTurnos(turnos) {
+      localStorage.setItem("turnos", JSON.stringify(turnos));
     }
 
     // Generar ID secuencial para un turno
-    async function generarIdTurno() {
-      const turnos = await getTurnos();
+    function generarIdTurno() {
+      const turnos = getTurnos();
       const ids = turnos.map(t => parseInt(t.id) || 0);
       const maxId = Math.max(...ids, 0);
       return (maxId + 1).toString();
     }
 
     // Generar turnos para una fecha específica
-    async function generarTurnos() {
+    function generarTurnos() {
       const fechaGenerar = document.getElementById("fechaGenerar").value;
       if (!fechaGenerar) {
         Swal.fire({
@@ -746,18 +632,19 @@
         return;
       }
 
-      const turnos = await getTurnos();
+      const turnos = getTurnos();
       const formattedDate = formatDate(fechaGenerar);
       const turnosExistentes = new Set(turnos
         .filter(t => t.fecha === formattedDate)
         .map(t => t.hora));
 
       const nuevosTurnos = [];
+      let nextId = parseInt(generarIdTurno());
+
       for (const hora of horarios) {
         if (!turnosExistentes.has(hora)) {
-          const id = await generarIdTurno();
           nuevosTurnos.push({
-            id: id,
+            id: (nextId++).toString(),
             fecha: formattedDate,
             hora: hora,
             Disponible: "Sí",
@@ -777,9 +664,7 @@
         return;
       }
 
-      for (const turno of nuevosTurnos) {
-        await saveTurno(turno);
-      }
+      saveTurnos([...turnos, ...nuevosTurnos]);
 
       Swal.fire({
         icon: "success",
@@ -789,30 +674,23 @@
         showConfirmButton: false
       });
       document.getElementById("fechaGenerar").value = "";
-      await mostrarTurnosAdmin();
+      mostrarTurnosAdmin();
     }
 
     // Eliminar turno
-    async function deleteTurno(id) {
-      try {
-        await deleteDoc(doc(db, "turnos", id));
-        Swal.fire({
-          icon: "success",
-          title: "Turno eliminado",
-          text: "El turno ha sido eliminado correctamente.",
-          timer: 1500,
-          showConfirmButton: false
-        });
-        await mostrarTurnosAdmin();
-      } catch (error) {
-        console.error("Error al eliminar turno: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo eliminar el turno. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
-      }
+    function deleteTurno(id) {
+      const turnos = getTurnos();
+      const updatedTurnos = turnos.filter(t => t.id !== id);
+      saveTurnos(updatedTurnos);
+
+      Swal.fire({
+        icon: "success",
+        title: "Turno eliminado",
+        text: "El turno ha sido eliminado correctamente.",
+        timer: 1500,
+        showConfirmButton: false
+      });
+      mostrarTurnosAdmin();
     }
 
     // Admin prompt function for SweetAlert2
@@ -845,47 +723,35 @@
       });
     }
 
-    // Update turno in Firestore
-    async function updateTurno(id, disponible, nombre = "", telefono = "") {
-      try {
-        const turnos = await getTurnos();
-        const turno = turnos.find(t => t.id === id);
-        if (!turno) {
-          throw new Error("Turno no encontrado");
+    // Update turno in localStorage
+    function updateTurno(id, disponible, nombre = "", telefono = "") {
+      const turnos = getTurnos();
+      const updatedTurnos = turnos.map(t => {
+        if (t.id === id) {
+          return { ...t, Disponible: disponible, nombre: disponible === "Sí" ? "" : nombre, telefono: disponible === "Sí" ? "" : telefono };
         }
-        await setDoc(doc(db, "turnos", id), {
-          ...turno,
-          Disponible: disponible,
-          nombre: disponible === "Sí" ? "" : nombre,
-          telefono: disponible === "Sí" ? "" : telefono
-        });
-        Swal.fire({
-          icon: "success",
-          title: "Turno actualizado",
-          text: `El turno ha sido actualizado correctamente.`,
-          timer: 1500,
-          showConfirmButton: false
-        });
-        await mostrarTurnosAdmin();
-      } catch (error) {
-        console.error("Error al actualizar turno: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
-      }
+        return t;
+      });
+      saveTurnos(updatedTurnos);
+
+      Swal.fire({
+        icon: "success",
+        title: "Turno actualizado",
+        text: `El turno ha sido actualizado correctamente.`,
+        timer: 1500,
+        showConfirmButton: false
+      });
+      mostrarTurnosAdmin();
     }
 
     // Handle toggle disponible
-    async function handleToggleDisponible(id, currentDisponible) {
+    function handleToggleDisponible(id, currentDisponible) {
       const nuevoEstado = currentDisponible === "Sí" ? "No" : "Sí";
-      await updateTurno(id, nuevoEstado);
+      updateTurno(id, nuevoEstado);
     }
 
     // Handle edit name (clicking on name)
-    async function handleEditName(id, currentName, currentDisponible) {
+    function handleEditName(id, currentName, currentDisponible) {
       Swal.fire({
         title: "Editar Nombre del Cliente",
         input: "text",
@@ -902,15 +768,15 @@
             return "Debes ingresar un nombre";
           }
         }
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-          await updateTurno(id, "No", result.value);
+          updateTurno(id, "No", result.value);
         }
       });
     }
 
     // Handle edit turno (edit button)
-    async function handleEditTurno(id, currentFecha, currentHora, currentNombre, currentTelefono, currentDisponible) {
+    function handleEditTurno(id, currentFecha, currentHora, currentNombre, currentTelefono, currentDisponible) {
       Swal.fire({
         title: "Editar Turno",
         html: `
@@ -930,7 +796,7 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#facc15",
         cancelButtonColor: "#e3342f",
-        preConfirm: async () => {
+        preConfirm: () => {
           const fecha = document.getElementById("editFecha").value;
           const hora = document.getElementById("editHora").value;
           const nombre = document.getElementById("editNombre").value;
@@ -952,7 +818,7 @@
             return false;
           }
 
-          const turnos = await getTurnos();
+          const turnos = getTurnos();
           const turnoExists = turnos.some(t => t.fecha === formatDate(fecha) && t.hora === hora && t.id !== id);
           if (turnoExists) {
             Swal.showValidationMessage("Ya existe un turno en esa fecha y hora.");
@@ -961,41 +827,37 @@
 
           return { fecha, hora, nombre, telefono };
         }
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
           const { fecha, hora, nombre, telefono } = result.value;
-          try {
-            await setDoc(doc(db, "turnos", id), {
-              id: id,
+          const turnos = getTurnos();
+          let updatedTurnos = turnos;
+          if (currentFecha !== formatDate(fecha) || currentHora !== hora) {
+            updatedTurnos = turnos.filter(t => t.id !== id);
+            updatedTurnos.push({
+              id: generarIdTurno(),
               fecha: formatDate(fecha),
               hora: hora,
               Disponible: "No",
               nombre: nombre,
               telefono: telefono
             });
-            Swal.fire({
-              icon: "success",
-              title: "Turno actualizado",
-              text: "El turno ha sido actualizado correctamente.",
-              timer: 1500,
-              showConfirmButton: false
-            });
-            await mostrarTurnosAdmin();
-          } catch (error) {
-            console.error("Error al actualizar turno: ", error);
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
-              confirmButtonColor: "#facc15"
+          } else {
+            updatedTurnos = turnos.map(t => {
+              if (t.id === id) {
+                return { ...t, fecha: formatDate(fecha), hora: hora, Disponible: "No", nombre: nombre, telefono: telefono };
+              }
+              return t;
             });
           }
+          saveTurnos(updatedTurnos);
+          mostrarTurnosAdmin();
         }
       });
     }
 
     // Handle delete turno
-    async function handleDeleteTurno(id) {
+    function handleDeleteTurno(id) {
       Swal.fire({
         title: "¿Estás seguro?",
         text: "Esta acción eliminará el turno permanentemente.",
@@ -1005,45 +867,35 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#dc2626",
         cancelButtonColor: "#e3342f"
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-          await deleteTurno(id);
+          deleteTurno(id);
         }
       });
     }
 
     // Export turnos to JSON
-    async function exportTurnos() {
-      try {
-        const turnos = await getTurnos();
-        const dataStr = JSON.stringify(turnos, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `turnos_mbs_${new Date().toISOString().split("T")[0]}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        Swal.fire({
-          icon: "success",
-          title: "Turnos exportados",
-          text: "Los turnos se han exportado correctamente como archivo JSON.",
-          timer: 1500,
-          showConfirmButton: false
-        });
-      } catch (error) {
-        console.error("Error al exportar turnos: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudieron exportar los turnos. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
-      }
+    function exportTurnos() {
+      const turnos = getTurnos();
+      const dataStr = JSON.stringify(turnos, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `turnos_mbs_${new Date().toISOString().split("T")[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      Swal.fire({
+        icon: "success",
+        title: "Turnos exportados",
+        text: "Los turnos se han exportado correctamente como archivo JSON.",
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
 
     // Import turnos from JSON
-    async function importTurnos() {
+    function importTurnos() {
       Swal.fire({
         title: "Importar Turnos",
         text: "Selecciona un archivo JSON con los turnos.",
@@ -1057,16 +909,17 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#facc15",
         cancelButtonColor: "#e3342f"
-      }).then(async (result) => {
+      }).then((result) => {
         if (result.isConfirmed && result.value) {
           const file = result.value;
           const reader = new FileReader();
-          reader.onload = async (e) => {
+          reader.onload = (e) => {
             try {
               const importedTurnos = JSON.parse(e.target.result);
               if (!Array.isArray(importedTurnos)) {
                 throw new Error("El archivo no contiene una lista válida de turnos.");
               }
+              // Validar formato de turnos
               const isValid = importedTurnos.every(t => 
                 t.id && t.fecha && t.hora && t.Disponible && 
                 (t.Disponible === "Sí" || (t.nombre && t.telefono))
@@ -1074,14 +927,15 @@
               if (!isValid) {
                 throw new Error("El formato de los turnos no es válido.");
               }
-              const existingTurnos = await getTurnos();
+              // Verificar duplicados
+              const existingTurnos = getTurnos();
+              const combinedTurnos = [...existingTurnos];
               for (const turno of importedTurnos) {
-                const turnoExists = existingTurnos.some(t => t.fecha === turno.fecha && t.hora === turno.hora);
-                if (!turnoExists) {
-                  const newId = await generarIdTurno();
-                  await setDoc(doc(db, "turnos", newId), { ...turno, id: newId });
+                if (!combinedTurnos.some(t => t.fecha === turno.fecha && t.hora === turno.hora)) {
+                  combinedTurnos.push({ ...turno, id: generarIdTurno() });
                 }
               }
+              saveTurnos(combinedTurnos);
               Swal.fire({
                 icon: "success",
                 title: "Turnos importados",
@@ -1089,9 +943,8 @@
                 timer: 1500,
                 showConfirmButton: false
               });
-              await mostrarTurnosAdmin();
+              mostrarTurnosAdmin();
             } catch (err) {
-              console.error("Error al importar turnos: ", err);
               Swal.fire({
                 icon: "error",
                 title: "Error",
@@ -1106,16 +959,13 @@
     }
 
     // Display all turnos in admin modal
-    async function mostrarTurnosAdmin() {
-      const turnos = await getTurnos();
+    function mostrarTurnosAdmin() {
+      const turnos = getTurnos();
       const lista = document.getElementById("listaTurnosAdmin");
-      const listaMobile = document.getElementById("turnos-mobile");
       lista.innerHTML = "";
-      listaMobile.innerHTML = "";
 
       if (turnos.length === 0) {
         lista.innerHTML = `<tr><td colspan="6" class="text-center">No se encontraron turnos. Genera turnos para comenzar.</td></tr>`;
-        listaMobile.innerHTML = `<p class="text-center text-gray-200">No se encontraron turnos. Genera turnos para comenzar.</p>`;
         document.getElementById("admin-modal").classList.add("active");
         return;
       }
@@ -1135,7 +985,6 @@
         const telefono = t.telefono || "";
         const estado = disponible === "Sí" ? '<span style="color: #10b981;">Disponible</span>' : nombre ? '<span style="color: #facc15;">Reservado</span>' : '<span style="color: #e3342f;">No Disponible</span>';
 
-        // Table row for desktop
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${id}</td>
@@ -1156,30 +1005,6 @@
           </td>
         `;
         lista.appendChild(row);
-
-        // Card for mobile
-        const card = document.createElement("div");
-        card.className = "turno-card";
-        card.innerHTML = `
-          <p><strong>ID:</strong> ${id}</p>
-          <p><strong>Fecha:</strong> ${fecha}</p>
-          <p><strong>Hora:</strong> ${hora}</p>
-          <p><strong>Estado:</strong> ${estado}</p>
-          <p><strong>Cliente:</strong> <span class="editable-name" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</span></p>
-          <p><strong>Teléfono:</strong> ${telefono || "—"}</p>
-          <div class="turno-actions">
-            <button class="toggle-disponible ${disponible === 'Sí' ? 'disponible' : 'no-disponible'}" onclick="handleToggleDisponible('${id}', '${disponible}')">
-              ${disponible === "Sí" ? "No Disponible" : "Disponible"}
-            </button>
-            <button class="edit-turno" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
-              Editar
-            </button>
-            <button class="delete-turno" onclick="handleDeleteTurno('${id}')">
-              Eliminar
-            </button>
-          </div>
-        `;
-        listaMobile.appendChild(card);
       });
 
       document.getElementById("admin-modal").classList.add("active");
@@ -1206,7 +1031,7 @@
     }
 
     // Update available time slots for client booking
-    async function updateTimeSlots() {
+    function updateTimeSlots() {
       const fechaInput = document.getElementById("fecha");
       const horaSelect = document.getElementById("hora");
       const selectedDate = fechaInput.value;
@@ -1242,42 +1067,30 @@
         return;
       }
 
+      const turnos = getTurnos();
       const formattedSelectedDate = formatDate(selectedDate);
-      const q = query(collection(db, "turnos"), where("fecha", "==", formattedSelectedDate), where("Disponible", "==", "Sí"));
-      try {
-        const querySnapshot = await getDocs(q);
-        const disponibles = [];
-        querySnapshot.forEach((doc) => {
-          disponibles.push(doc.data());
-        });
+      const disponibles = turnos.filter(
+        (t) => t.Disponible === "Sí" && t.fecha === formattedSelectedDate
+      );
 
-        disponibles.sort((a, b) => a.hora.localeCompare(b.hora));
+      disponibles.sort((a, b) => a.hora.localeCompare(b.hora));
 
-        disponibles.forEach((t) => {
-          const option = document.createElement("option");
-          option.value = t.hora || "";
-          option.textContent = t.hora ? `${t.hora} (Disponible)` : "Hora no disponible";
-          horaSelect.appendChild(option);
-        });
+      disponibles.forEach((t) => {
+        const option = document.createElement("option");
+        option.value = t.hora || "";
+        option.textContent = t.hora ? `${t.hora} (Disponible)` : "Hora no disponible";
+        horaSelect.appendChild(option);
+      });
 
-        horaSelect.disabled = false;
-        if (disponibles.length === 0) {
-          horaSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles para esta fecha. Intenta con otra.</option>';
-          horaSelect.disabled = true;
-        }
-      } catch (error) {
-        console.error("Error al cargar horarios disponibles: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudieron cargar los horarios. Inténtalo de nuevo.",
-          confirmButtonColor: "#facc15"
-        });
+      horaSelect.disabled = false;
+      if (disponibles.length === 0) {
+        horaSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles para esta fecha. Intenta con otra.</option>';
+        horaSelect.disabled = true;
       }
     }
 
     // Handle booking form submission
-    async function reservarTurno(event) {
+    function reservarTurno(event) {
       event.preventDefault();
       const nombre = document.getElementById("nombre").value;
       const telefono = document.getElementById("telefono").value;
@@ -1305,53 +1118,42 @@
         return;
       }
 
+      const turnos = getTurnos();
       const formattedDate = formatDate(fecha);
-      const q = query(collection(db, "turnos"), where("fecha", "==", formattedDate), where("hora", "==", hora), where("Disponible", "==", "Sí"));
-      try {
-        const querySnapshot = await getDocs(q);
-        let turno = null;
-        querySnapshot.forEach((doc) => {
-          turno = { id: doc.id, ...doc.data() };
-        });
+      const turno = turnos.find(
+        (t) => t.fecha === formattedDate && t.hora === hora && t.Disponible === "Sí"
+      );
 
-        if (!turno) {
-          Swal.fire({
-            icon: "warning",
-            title: "Horario no disponible",
-            text: "El turno seleccionado ya no está disponible. Por favor, elige otro horario.",
-            confirmButtonColor: "#facc15"
-          });
-          return;
-        }
-
-        await setDoc(doc(db, "turnos", turno.id), {
-          ...turno,
-          nombre: nombre,
-          telefono: telefono,
-          Disponible: "No"
-        });
-
+      if (!turno) {
         Swal.fire({
-          icon: "success",
-          title: "Turno reservado",
-          text: "Tu turno ha sido reservado con éxito.",
-          timer: 2000,
-          showConfirmButton: false
-        });
-        document.getElementById("reserva-form").reset();
-        document.getElementById("fecha").value = "";
-        document.getElementById("hora").innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-        document.getElementById("hora").disabled = true;
-        await updateTimeSlots();
-      } catch (error) {
-        console.error("Error al reservar turno: ", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo reservar el turno. Inténtalo de nuevo.",
+          icon: "warning",
+          title: "Horario no disponible",
+          text: "El turno seleccionado ya no está disponible. Por favor, elige otro horario.",
           confirmButtonColor: "#facc15"
         });
+        return;
       }
+
+      const updatedTurnos = turnos.map(t => {
+        if (t.id === turno.id) {
+          return { ...t, nombre: nombre, telefono: telefono, Disponible: "No" };
+        }
+        return t;
+      });
+      saveTurnos(updatedTurnos);
+
+      Swal.fire({
+        icon: "success",
+        title: "Turno reservado",
+        text: "Tu turno ha sido reservado con éxito.",
+        timer: 2000,
+        showConfirmButton: false
+      });
+      document.getElementById("reserva-form").reset();
+      document.getElementById("fecha").value = "";
+      document.getElementById("hora").innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+      document.getElementById("hora").disabled = true;
+      updateTimeSlots();
     }
 
     // Initialize event listeners and date constraints
@@ -1364,7 +1166,7 @@
 
       fechaInput.min = formatDateToISO(minDate);
 
-      fechaInput.addEventListener("change", async (e) => {
+      fechaInput.addEventListener("change", (e) => {
         const selectedDate = parseDMY(e.target.value);
         if (!selectedDate || isNaN(selectedDate)) {
           Swal.fire({
@@ -1393,7 +1195,7 @@
           return;
         }
 
-        await updateTimeSlots();
+        updateTimeSlots();
       });
 
       horaSelect.disabled = true;
