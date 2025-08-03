@@ -11,7 +11,7 @@
   <meta property="og:image" content="img/logomonkey.png">
   <meta property="og:url" content="https://www.mbsbarberstudio.com">
   <title>MBS Barber Studio</title>
-  <link rel="icon" href="img/logomonkey.png" type="image/x-icon">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -603,16 +603,33 @@
     <span class="font-['Poppins']">Reservar Turno</span>
   </a>
 
-  <script>
-    const ADMIN_PASSWORD = "admin123"; // Cambia esta contraseña según sea necesario
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-    // Días: martes (2) a sábado (6)
-    const diasHabilitados = [2, 3, 4, 5, 6];
+    const firebaseConfig = {
+      apiKey: "AIzaSyD0dfRMXPv35Qpe54P3xezjt4OAACM9Flc",
+      authDomain: "peluqueriambs.firebaseapp.com",
+      projectId: "peluqueriambs",
+      storageBucket: "peluqueriambs.firebasestorage.app",
+      messagingSenderId: "687777736494",
+      appId: "1:687777736494:web:e2ea7be639eaafee2a3cbf",
+      measurementId: "G-XKS6MYTM3L"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Admin password
+    const ADMIN_PASSWORD = "admin123";
 
     // Horarios
     const horariosManana = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00"];
     const horariosTarde = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
     const horarios = [...horariosManana, ...horariosTarde];
+    const diasHabilitados = [2, 3, 4, 5, 6];
 
     // Parsear fecha desde DD/MM/YYYY o YYYY-MM-DD a Date
     function parseDMY(dateStr) {
@@ -651,27 +668,52 @@
       return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     }
 
-    // Obtener turnos desde localStorage
-    function getTurnos() {
-      const turnos = localStorage.getItem("turnos");
-      return turnos ? JSON.parse(turnos) : [];
+    // Obtener turnos desde Firestore
+    async function getTurnos() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "turnos"));
+        const turnos = [];
+        querySnapshot.forEach((doc) => {
+          turnos.push({ id: doc.id, ...doc.data() });
+        });
+        return turnos;
+      } catch (error) {
+        console.error("Error al obtener turnos: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudieron cargar los turnos. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
+        return [];
+      }
     }
 
-    // Guardar turnos en localStorage
-    function saveTurnos(turnos) {
-      localStorage.setItem("turnos", JSON.stringify(turnos));
+    // Guardar turno en Firestore
+    async function saveTurno(turno) {
+      try {
+        await setDoc(doc(db, "turnos", turno.id), turno);
+      } catch (error) {
+        console.error("Error al guardar turno: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo guardar el turno. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
+      }
     }
 
     // Generar ID secuencial para un turno
-    function generarIdTurno() {
-      const turnos = getTurnos();
+    async function generarIdTurno() {
+      const turnos = await getTurnos();
       const ids = turnos.map(t => parseInt(t.id) || 0);
       const maxId = Math.max(...ids, 0);
       return (maxId + 1).toString();
     }
 
     // Generar turnos para una fecha específica
-    function generarTurnos() {
+    async function generarTurnos() {
       const fechaGenerar = document.getElementById("fechaGenerar").value;
       if (!fechaGenerar) {
         Swal.fire({
@@ -704,19 +746,18 @@
         return;
       }
 
-      const turnos = getTurnos();
+      const turnos = await getTurnos();
       const formattedDate = formatDate(fechaGenerar);
       const turnosExistentes = new Set(turnos
         .filter(t => t.fecha === formattedDate)
         .map(t => t.hora));
 
       const nuevosTurnos = [];
-      let nextId = parseInt(generarIdTurno());
-
       for (const hora of horarios) {
         if (!turnosExistentes.has(hora)) {
+          const id = await generarIdTurno();
           nuevosTurnos.push({
-            id: (nextId++).toString(),
+            id: id,
             fecha: formattedDate,
             hora: hora,
             Disponible: "Sí",
@@ -736,7 +777,9 @@
         return;
       }
 
-      saveTurnos([...turnos, ...nuevosTurnos]);
+      for (const turno of nuevosTurnos) {
+        await saveTurno(turno);
+      }
 
       Swal.fire({
         icon: "success",
@@ -746,23 +789,30 @@
         showConfirmButton: false
       });
       document.getElementById("fechaGenerar").value = "";
-      mostrarTurnosAdmin();
+      await mostrarTurnosAdmin();
     }
 
     // Eliminar turno
-    function deleteTurno(id) {
-      const turnos = getTurnos();
-      const updatedTurnos = turnos.filter(t => t.id !== id);
-      saveTurnos(updatedTurnos);
-
-      Swal.fire({
-        icon: "success",
-        title: "Turno eliminado",
-        text: "El turno ha sido eliminado correctamente.",
-        timer: 1500,
-        showConfirmButton: false
-      });
-      mostrarTurnosAdmin();
+    async function deleteTurno(id) {
+      try {
+        await deleteDoc(doc(db, "turnos", id));
+        Swal.fire({
+          icon: "success",
+          title: "Turno eliminado",
+          text: "El turno ha sido eliminado correctamente.",
+          timer: 1500,
+          showConfirmButton: false
+        });
+        await mostrarTurnosAdmin();
+      } catch (error) {
+        console.error("Error al eliminar turno: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo eliminar el turno. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
+      }
     }
 
     // Admin prompt function for SweetAlert2
@@ -795,35 +845,47 @@
       });
     }
 
-    // Update turno in localStorage
-    function updateTurno(id, disponible, nombre = "", telefono = "") {
-      const turnos = getTurnos();
-      const updatedTurnos = turnos.map(t => {
-        if (t.id === id) {
-          return { ...t, Disponible: disponible, nombre: disponible === "Sí" ? "" : nombre, telefono: disponible === "Sí" ? "" : telefono };
+    // Update turno in Firestore
+    async function updateTurno(id, disponible, nombre = "", telefono = "") {
+      try {
+        const turnos = await getTurnos();
+        const turno = turnos.find(t => t.id === id);
+        if (!turno) {
+          throw new Error("Turno no encontrado");
         }
-        return t;
-      });
-      saveTurnos(updatedTurnos);
-
-      Swal.fire({
-        icon: "success",
-        title: "Turno actualizado",
-        text: `El turno ha sido actualizado correctamente.`,
-        timer: 1500,
-        showConfirmButton: false
-      });
-      mostrarTurnosAdmin();
+        await setDoc(doc(db, "turnos", id), {
+          ...turno,
+          Disponible: disponible,
+          nombre: disponible === "Sí" ? "" : nombre,
+          telefono: disponible === "Sí" ? "" : telefono
+        });
+        Swal.fire({
+          icon: "success",
+          title: "Turno actualizado",
+          text: `El turno ha sido actualizado correctamente.`,
+          timer: 1500,
+          showConfirmButton: false
+        });
+        await mostrarTurnosAdmin();
+      } catch (error) {
+        console.error("Error al actualizar turno: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
+      }
     }
 
     // Handle toggle disponible
-    function handleToggleDisponible(id, currentDisponible) {
+    async function handleToggleDisponible(id, currentDisponible) {
       const nuevoEstado = currentDisponible === "Sí" ? "No" : "Sí";
-      updateTurno(id, nuevoEstado);
+      await updateTurno(id, nuevoEstado);
     }
 
     // Handle edit name (clicking on name)
-    function handleEditName(id, currentName, currentDisponible) {
+    async function handleEditName(id, currentName, currentDisponible) {
       Swal.fire({
         title: "Editar Nombre del Cliente",
         input: "text",
@@ -840,15 +902,15 @@
             return "Debes ingresar un nombre";
           }
         }
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          updateTurno(id, "No", result.value);
+          await updateTurno(id, "No", result.value);
         }
       });
     }
 
     // Handle edit turno (edit button)
-    function handleEditTurno(id, currentFecha, currentHora, currentNombre, currentTelefono, currentDisponible) {
+    async function handleEditTurno(id, currentFecha, currentHora, currentNombre, currentTelefono, currentDisponible) {
       Swal.fire({
         title: "Editar Turno",
         html: `
@@ -868,7 +930,7 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#facc15",
         cancelButtonColor: "#e3342f",
-        preConfirm: () => {
+        preConfirm: async () => {
           const fecha = document.getElementById("editFecha").value;
           const hora = document.getElementById("editHora").value;
           const nombre = document.getElementById("editNombre").value;
@@ -890,7 +952,7 @@
             return false;
           }
 
-          const turnos = getTurnos();
+          const turnos = await getTurnos();
           const turnoExists = turnos.some(t => t.fecha === formatDate(fecha) && t.hora === hora && t.id !== id);
           if (turnoExists) {
             Swal.showValidationMessage("Ya existe un turno en esa fecha y hora.");
@@ -899,37 +961,41 @@
 
           return { fecha, hora, nombre, telefono };
         }
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           const { fecha, hora, nombre, telefono } = result.value;
-          const turnos = getTurnos();
-          let updatedTurnos = turnos;
-          if (currentFecha !== formatDate(fecha) || currentHora !== hora) {
-            updatedTurnos = turnos.filter(t => t.id !== id);
-            updatedTurnos.push({
-              id: generarIdTurno(),
+          try {
+            await setDoc(doc(db, "turnos", id), {
+              id: id,
               fecha: formatDate(fecha),
               hora: hora,
               Disponible: "No",
               nombre: nombre,
               telefono: telefono
             });
-          } else {
-            updatedTurnos = turnos.map(t => {
-              if (t.id === id) {
-                return { ...t, fecha: formatDate(fecha), hora: hora, Disponible: "No", nombre: nombre, telefono: telefono };
-              }
-              return t;
+            Swal.fire({
+              icon: "success",
+              title: "Turno actualizado",
+              text: "El turno ha sido actualizado correctamente.",
+              timer: 1500,
+              showConfirmButton: false
+            });
+            await mostrarTurnosAdmin();
+          } catch (error) {
+            console.error("Error al actualizar turno: ", error);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
+              confirmButtonColor: "#facc15"
             });
           }
-          saveTurnos(updatedTurnos);
-          mostrarTurnosAdmin();
         }
       });
     }
 
     // Handle delete turno
-    function handleDeleteTurno(id) {
+    async function handleDeleteTurno(id) {
       Swal.fire({
         title: "¿Estás seguro?",
         text: "Esta acción eliminará el turno permanentemente.",
@@ -939,35 +1005,45 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#dc2626",
         cancelButtonColor: "#e3342f"
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          deleteTurno(id);
+          await deleteTurno(id);
         }
       });
     }
 
     // Export turnos to JSON
-    function exportTurnos() {
-      const turnos = getTurnos();
-      const dataStr = JSON.stringify(turnos, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `turnos_mbs_${new Date().toISOString().split("T")[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      Swal.fire({
-        icon: "success",
-        title: "Turnos exportados",
-        text: "Los turnos se han exportado correctamente como archivo JSON.",
-        timer: 1500,
-        showConfirmButton: false
-      });
+    async function exportTurnos() {
+      try {
+        const turnos = await getTurnos();
+        const dataStr = JSON.stringify(turnos, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `turnos_mbs_${new Date().toISOString().split("T")[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        Swal.fire({
+          icon: "success",
+          title: "Turnos exportados",
+          text: "Los turnos se han exportado correctamente como archivo JSON.",
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } catch (error) {
+        console.error("Error al exportar turnos: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudieron exportar los turnos. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
+      }
     }
 
     // Import turnos from JSON
-    function importTurnos() {
+    async function importTurnos() {
       Swal.fire({
         title: "Importar Turnos",
         text: "Selecciona un archivo JSON con los turnos.",
@@ -981,17 +1057,16 @@
         cancelButtonText: "Cancelar",
         confirmButtonColor: "#facc15",
         cancelButtonColor: "#e3342f"
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed && result.value) {
           const file = result.value;
           const reader = new FileReader();
-          reader.onload = (e) => {
+          reader.onload = async (e) => {
             try {
               const importedTurnos = JSON.parse(e.target.result);
               if (!Array.isArray(importedTurnos)) {
                 throw new Error("El archivo no contiene una lista válida de turnos.");
               }
-              // Validar formato de turnos
               const isValid = importedTurnos.every(t => 
                 t.id && t.fecha && t.hora && t.Disponible && 
                 (t.Disponible === "Sí" || (t.nombre && t.telefono))
@@ -999,15 +1074,14 @@
               if (!isValid) {
                 throw new Error("El formato de los turnos no es válido.");
               }
-              // Verificar duplicados
-              const existingTurnos = getTurnos();
-              const combinedTurnos = [...existingTurnos];
+              const existingTurnos = await getTurnos();
               for (const turno of importedTurnos) {
-                if (!combinedTurnos.some(t => t.fecha === turno.fecha && t.hora === turno.hora)) {
-                  combinedTurnos.push({ ...turno, id: generarIdTurno() });
+                const turnoExists = existingTurnos.some(t => t.fecha === turno.fecha && t.hora === turno.hora);
+                if (!turnoExists) {
+                  const newId = await generarIdTurno();
+                  await setDoc(doc(db, "turnos", newId), { ...turno, id: newId });
                 }
               }
-              saveTurnos(combinedTurnos);
               Swal.fire({
                 icon: "success",
                 title: "Turnos importados",
@@ -1015,8 +1089,9 @@
                 timer: 1500,
                 showConfirmButton: false
               });
-              mostrarTurnosAdmin();
+              await mostrarTurnosAdmin();
             } catch (err) {
+              console.error("Error al importar turnos: ", err);
               Swal.fire({
                 icon: "error",
                 title: "Error",
@@ -1031,8 +1106,8 @@
     }
 
     // Display all turnos in admin modal
-    function mostrarTurnosAdmin() {
-      const turnos = getTurnos();
+    async function mostrarTurnosAdmin() {
+      const turnos = await getTurnos();
       const lista = document.getElementById("listaTurnosAdmin");
       const listaMobile = document.getElementById("turnos-mobile");
       lista.innerHTML = "";
@@ -1131,7 +1206,7 @@
     }
 
     // Update available time slots for client booking
-    function updateTimeSlots() {
+    async function updateTimeSlots() {
       const fechaInput = document.getElementById("fecha");
       const horaSelect = document.getElementById("hora");
       const selectedDate = fechaInput.value;
@@ -1167,30 +1242,42 @@
         return;
       }
 
-      const turnos = getTurnos();
       const formattedSelectedDate = formatDate(selectedDate);
-      const disponibles = turnos.filter(
-        (t) => t.Disponible === "Sí" && t.fecha === formattedSelectedDate
-      );
+      const q = query(collection(db, "turnos"), where("fecha", "==", formattedSelectedDate), where("Disponible", "==", "Sí"));
+      try {
+        const querySnapshot = await getDocs(q);
+        const disponibles = [];
+        querySnapshot.forEach((doc) => {
+          disponibles.push(doc.data());
+        });
 
-      disponibles.sort((a, b) => a.hora.localeCompare(b.hora));
+        disponibles.sort((a, b) => a.hora.localeCompare(b.hora));
 
-      disponibles.forEach((t) => {
-        const option = document.createElement("option");
-        option.value = t.hora || "";
-        option.textContent = t.hora ? `${t.hora} (Disponible)` : "Hora no disponible";
-        horaSelect.appendChild(option);
-      });
+        disponibles.forEach((t) => {
+          const option = document.createElement("option");
+          option.value = t.hora || "";
+          option.textContent = t.hora ? `${t.hora} (Disponible)` : "Hora no disponible";
+          horaSelect.appendChild(option);
+        });
 
-      horaSelect.disabled = false;
-      if (disponibles.length === 0) {
-        horaSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles para esta fecha. Intenta con otra.</option>';
-        horaSelect.disabled = true;
+        horaSelect.disabled = false;
+        if (disponibles.length === 0) {
+          horaSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles para esta fecha. Intenta con otra.</option>';
+          horaSelect.disabled = true;
+        }
+      } catch (error) {
+        console.error("Error al cargar horarios disponibles: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudieron cargar los horarios. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
       }
     }
 
     // Handle booking form submission
-    function reservarTurno(event) {
+    async function reservarTurno(event) {
       event.preventDefault();
       const nombre = document.getElementById("nombre").value;
       const telefono = document.getElementById("telefono").value;
@@ -1218,42 +1305,53 @@
         return;
       }
 
-      const turnos = getTurnos();
       const formattedDate = formatDate(fecha);
-      const turno = turnos.find(
-        (t) => t.fecha === formattedDate && t.hora === hora && t.Disponible === "Sí"
-      );
+      const q = query(collection(db, "turnos"), where("fecha", "==", formattedDate), where("hora", "==", hora), where("Disponible", "==", "Sí"));
+      try {
+        const querySnapshot = await getDocs(q);
+        let turno = null;
+        querySnapshot.forEach((doc) => {
+          turno = { id: doc.id, ...doc.data() };
+        });
 
-      if (!turno) {
+        if (!turno) {
+          Swal.fire({
+            icon: "warning",
+            title: "Horario no disponible",
+            text: "El turno seleccionado ya no está disponible. Por favor, elige otro horario.",
+            confirmButtonColor: "#facc15"
+          });
+          return;
+        }
+
+        await setDoc(doc(db, "turnos", turno.id), {
+          ...turno,
+          nombre: nombre,
+          telefono: telefono,
+          Disponible: "No"
+        });
+
         Swal.fire({
-          icon: "warning",
-          title: "Horario no disponible",
-          text: "El turno seleccionado ya no está disponible. Por favor, elige otro horario.",
+          icon: "success",
+          title: "Turno reservado",
+          text: "Tu turno ha sido reservado con éxito.",
+          timer: 2000,
+          showConfirmButton: false
+        });
+        document.getElementById("reserva-form").reset();
+        document.getElementById("fecha").value = "";
+        document.getElementById("hora").innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+        document.getElementById("hora").disabled = true;
+        await updateTimeSlots();
+      } catch (error) {
+        console.error("Error al reservar turno: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo reservar el turno. Inténtalo de nuevo.",
           confirmButtonColor: "#facc15"
         });
-        return;
       }
-
-      const updatedTurnos = turnos.map(t => {
-        if (t.id === turno.id) {
-          return { ...t, nombre: nombre, telefono: telefono, Disponible: "No" };
-        }
-        return t;
-      });
-      saveTurnos(updatedTurnos);
-
-      Swal.fire({
-        icon: "success",
-        title: "Turno reservado",
-        text: "Tu turno ha sido reservado con éxito.",
-        timer: 2000,
-        showConfirmButton: false
-      });
-      document.getElementById("reserva-form").reset();
-      document.getElementById("fecha").value = "";
-      document.getElementById("hora").innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-      document.getElementById("hora").disabled = true;
-      updateTimeSlots();
     }
 
     // Initialize event listeners and date constraints
@@ -1266,7 +1364,7 @@
 
       fechaInput.min = formatDateToISO(minDate);
 
-      fechaInput.addEventListener("change", (e) => {
+      fechaInput.addEventListener("change", async (e) => {
         const selectedDate = parseDMY(e.target.value);
         if (!selectedDate || isNaN(selectedDate)) {
           Swal.fire({
@@ -1295,7 +1393,7 @@
           return;
         }
 
-        updateTimeSlots();
+        await updateTimeSlots();
       });
 
       horaSelect.disabled = true;
