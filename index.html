@@ -135,12 +135,6 @@
     input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(30deg) brightness(100%);
     }
-    .turno-item {
-      @apply flex justify-between items-center p-3 bg-gray-800 rounded-lg mb-2 hover:bg-gray-700 transition-all;
-    }
-    .turno-item button {
-      @apply bg-yellow-400 text-gray-900 font-semibold px-3 py-1.5 rounded-lg hover:bg-yellow-500 transition-colors text-sm;
-    }
     @media (max-width: 640px) {
       .form-turno {
         @apply max-w-xs p-6;
@@ -148,7 +142,7 @@
       input, select {
         @apply text-sm p-3;
       }
-      button[type="submit"], .turno-item button {
+      button[type="submit"] {
         @apply text-base py-2;
       }
     }
@@ -284,12 +278,7 @@
     <section id="turnos" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Reservar Turno</h2>
-        <div class="mb-8">
-          <h3 class="text-2xl font-semibold text-center mb-4 font-['Poppins'] text-gray-200">Turnos Disponibles</h3>
-          <div id="listaTurnos" class="max-w-lg mx-auto"></div>
-        </div>
         <div id="form-turno" class="max-w-lg mx-auto p-8 bg-gray-800 rounded-lg shadow-md form-turno" aria-label="Formulario de reserva de turno">
-          <h3 class="text-xl font-semibold mb-6 font-['Poppins'] text-gray-200">O reserva manualmente</h3>
           <form id="reserva-form" onsubmit="reservarTurno(event)">
             <div class="mb-6">
               <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-user"></i> Nombre:</label>
@@ -448,50 +437,6 @@
       return slots;
     }
 
-    async function cargarTurnosDisponibles() {
-      const contenedor = document.getElementById('listaTurnos');
-      contenedor.innerHTML = '<div class="text-center text-gray-300"><i class="fas fa-spinner fa-spin mr-2"></i>Cargando turnos...</div>';
-
-      try {
-        const res = await fetch(API_URL);
-        const datos = await res.json();
-        const workingDays = getNextWorkingDays(30);
-        const timeSlots = generateTimeSlots();
-        const disponibles = [];
-
-        workingDays.forEach(day => {
-          const formattedDate = formatDate(day.toISOString().split('T')[0]);
-          timeSlots.forEach(slot => {
-            const isOccupied = datos.some(t => 
-              formatDate(t.fecha) === formattedDate && formatTime(t.hora) === slot
-            );
-            if (!isOccupied) {
-              disponibles.push({ fecha: formattedDate, hora: slot });
-            }
-          });
-        });
-
-        contenedor.innerHTML = '';
-        if (disponibles.length === 0) {
-          contenedor.innerHTML = '<div class="text-center text-gray-300"><i class="fas fa-exclamation-circle mr-2"></i>No hay turnos disponibles.</div>';
-          return;
-        }
-
-        disponibles.forEach(turno => {
-          const div = document.createElement('div');
-          div.className = 'turno-item';
-          div.innerHTML = `
-            <span><i class="fas fa-calendar-alt mr-2 text-yellow-400"></i>${turno.fecha} - ${turno.hora} (Disponible)</span>
-            <button onclick="reservarDesdeLista('${turno.fecha}', '${turno.hora}')">Reservar</button>
-          `;
-          contenedor.appendChild(div);
-        });
-      } catch (err) {
-        console.error('Error cargando turnos:', err);
-        contenedor.innerHTML = '<div class="text-center text-gray-300"><i class="fas fa-exclamation-circle mr-2"></i>Error al cargar turnos.</div>';
-      }
-    }
-
     async function updateTimeSlots() {
       const fechaInput = document.getElementById('fecha');
       const horaSelect = document.getElementById('hora');
@@ -594,57 +539,6 @@
           document.getElementById('fecha').value = '';
           document.getElementById('hora').innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
           document.getElementById('hora').disabled = true;
-          cargarTurnosDisponibles();
-        } else {
-          throw new Error('Error al reservar');
-        }
-      } catch (err) {
-        console.error('Error reservando turno:', err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo reservar el turno. Inténtalo de nuevo.',
-          confirmButtonColor: '#facc15'
-        });
-      }
-    }
-
-    async function reservarDesdeLista(fecha, hora) {
-      const nombre = document.getElementById('nombre').value;
-      const telefono = document.getElementById('telefono').value;
-
-      if (!nombre || !telefono) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Faltan datos',
-          text: 'Por favor, completa el nombre y teléfono antes de reservar.',
-          confirmButtonColor: '#facc15'
-        });
-        return;
-      }
-
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre,
-            telefono,
-            fecha,
-            hora
-          })
-        });
-
-        if (response.ok) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Turno reservado',
-            text: `Turno para ${fecha} a las ${hora} reservado con éxito.`,
-            timer: 2000,
-            showConfirmButton: false
-          });
-          document.getElementById('reserva-form').reset();
-          cargarTurnosDisponibles();
         } else {
           throw new Error('Error al reservar');
         }
@@ -690,7 +584,6 @@
       });
 
       horaSelect.disabled = true;
-      cargarTurnosDisponibles();
     });
 
     const menuToggle = document.querySelector('.menu-toggle');
