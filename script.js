@@ -189,8 +189,32 @@
 
   // Eliminar turno
   async function deleteTurno(id) {
+    if (!id) {
+      console.error("ID de turno inválido o no proporcionado:", id);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "ID de turno inválido. No se pudo eliminar el turno.",
+        confirmButtonColor: "#facc15"
+      });
+      return;
+    }
     try {
-      await db.collection("turnos").doc(id).delete();
+      console.log("Intentando eliminar turno con ID:", id);
+      const turnoRef = db.collection("turnos").doc(id);
+      const doc = await turnoRef.get();
+      if (!doc.exists) {
+        console.error("El turno no existe en Firestore, ID:", id);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "El turno no existe. No se pudo eliminar.",
+          confirmButtonColor: "#facc15"
+        });
+        return;
+      }
+      await turnoRef.delete();
+      console.log("Turno eliminado con éxito, ID:", id);
       Swal.fire({
         icon: "success",
         title: "Turno eliminado",
@@ -198,12 +222,14 @@
         timer: 1500,
         showConfirmButton: false
       });
+      // Forzar actualización de la tabla
+      mostrarTurnosAdmin();
     } catch (error) {
-      console.error("Error al eliminar turno: ", error);
+      console.error("Error al eliminar turno: ", error.code, error.message);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo eliminar el turno. Inténtalo de nuevo.",
+        text: `No se pudo eliminar el turno: ${error.message || "Error desconocido"}`,
         confirmButtonColor: "#facc15"
       });
     }
@@ -516,6 +542,16 @@
 
   // Manejar eliminación de turno
   async function handleDeleteTurno(id) {
+    if (!id) {
+      console.error("ID de turno inválido en handleDeleteTurno:", id);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "ID de turno inválido. No se pudo eliminar.",
+        confirmButtonColor: "#facc15"
+      });
+      return;
+    }
     Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción eliminará el turno permanentemente.",
