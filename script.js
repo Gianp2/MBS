@@ -801,18 +801,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verificar elementos del DOM
   const adminLink = document.getElementById("admin-link");
   const adminLinkMobile = document.getElementById("admin-link-mobile");
-  if (!adminLink) console.error("Elemento con ID 'admin-link' no encontrado");
-  if (!adminLinkMobile) console.error("Elemento con ID 'admin-link-mobile' no encontrado");
-
-  // Vincular eventos de los enlaces de administración
-  if (adminLink) {
-    adminLink.addEventListener("click", () => {
-      console.log("Botón Admin clicado");
+  
+  if (!adminLink) {
+    console.error("Elemento con ID 'admin-link' no encontrado");
+  } else {
+    console.log("Elemento 'admin-link' encontrado, vinculando evento...");
+    adminLink.addEventListener("click", (e) => {
+      e.preventDefault(); // Evitar cualquier comportamiento por defecto
+      console.log("Botón Admin clicado (escritorio)");
       mostrarPromptClave();
     });
   }
-  if (adminLinkMobile) {
-    adminLinkMobile.addEventListener("click", () => {
+
+  if (!adminLinkMobile) {
+    console.error("Elemento con ID 'admin-link-mobile' no encontrado");
+  } else {
+    console.log("Elemento 'admin-link-mobile' encontrado, vinculando evento...");
+    adminLinkMobile.addEventListener("click", (e) => {
+      e.preventDefault(); // Evitar cualquier comportamiento por defecto
       console.log("Botón Admin móvil clicado");
       mostrarPromptClave();
     });
@@ -824,85 +830,99 @@ document.addEventListener("DOMContentLoaded", () => {
   const minDate = new Date(today);
   minDate.setDate(today.getDate() + 1);
 
-  fechaInput.min = formatDateToISO(minDate);
+  if (fechaInput) {
+    fechaInput.min = formatDateToISO(minDate);
 
-  fechaInput.addEventListener("change", async (e) => {
-    const selectedDate = parseDMY(e.target.value);
-    if (!selectedDate || isNaN(selectedDate)) {
-      Swal.fire({
-        icon: "warning",
-        title: "Fecha inválida",
-        text: "Por favor, selecciona una fecha válida.",
-        confirmButtonColor: "#facc15"
-      });
-      e.target.value = "";
-      horaSelect.disabled = true;
-      horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-      return;
-    }
+    fechaInput.addEventListener("change", async (e) => {
+      const selectedDate = parseDMY(e.target.value);
+      if (!selectedDate || isNaN(selectedDate)) {
+        Swal.fire({
+          icon: "warning",
+          title: "Fecha inválida",
+          text: "Por favor, selecciona una fecha válida.",
+          confirmButtonColor: "#facc15"
+        });
+        e.target.value = "";
+        horaSelect.disabled = true;
+        horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+        return;
+      }
 
-    const dayOfWeek = selectedDate.getDay();
-    if (!diasHabilitados.includes(dayOfWeek)) {
-      Swal.fire({
-        icon: "warning",
-        title: "Día no laborable",
-        text: "Solo se pueden reservar turnos de martes a sábado.",
-        confirmButtonColor: "#facc15"
-      });
-      e.target.value = "";
-      horaSelect.disabled = true;
-      horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-      return;
-    }
+      const dayOfWeek = selectedDate.getDay();
+      if (!diasHabilitados.includes(dayOfWeek)) {
+        Swal.fire({
+          icon: "warning",
+          title: "Día no laborable",
+          text: "Solo se pueden reservar turnos de martes a sábado.",
+          confirmButtonColor: "#facc15"
+        });
+        e.target.value = "";
+        horaSelect.disabled = true;
+        horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
+        return;
+      }
 
-    await updateTimeSlots();
-  });
+      await updateTimeSlots();
+    });
+  }
 
-  horaSelect.disabled = true;
+  if (horaSelect) {
+    horaSelect.disabled = true;
+  }
 
   // Vincular botones de administración
-  document.getElementById("generarTurnos").addEventListener("click", generarTurnos);
-  document.getElementById("refreshTurnos").addEventListener("click", mostrarTurnosAdmin);
-  document.getElementById("exportTurnos").addEventListener("click", exportTurnos);
-  document.getElementById("importTurnos").addEventListener("click", importTurnos);
-  document.getElementById("logout").addEventListener("click", logout);
+  const generarTurnosBtn = document.getElementById("generarTurnos");
+  const refreshTurnosBtn = document.getElementById("refreshTurnos");
+  const exportTurnosBtn = document.getElementById("exportTurnos");
+  const importTurnosBtn = document.getElementById("importTurnos");
+  const logoutBtn = document.getElementById("logout");
+  const closeModalBtn = document.querySelector("#admin-modal .close-modal");
 
-  // Cerrar modal de administración
-  document.querySelector("#admin-modal .close-modal").addEventListener("click", () => {
-    document.getElementById("admin-modal").classList.remove("active");
+  if (generarTurnosBtn) generarTurnosBtn.addEventListener("click", generarTurnos);
+  if (refreshTurnosBtn) refreshTurnosBtn.addEventListener("click", mostrarTurnosAdmin);
+  if (exportTurnosBtn) exportTurnosBtn.addEventListener("click", exportTurnos);
+  if (importTurnosBtn) importTurnosBtn.addEventListener("click", importTurnos);
+  if (logoutBtn) logoutBtn.addEventListener("click", logout);
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", () => {
+      document.getElementById("admin-modal").classList.remove("active");
+    });
+  }
+
+  // Toggle menú móvil
+  const menuToggle = document.querySelector(".menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+      mobileMenu.classList.toggle("active");
+      menuToggle.innerHTML = mobileMenu.classList.contains("hidden") ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
+    });
+  }
+
+  // Cerrar menú móvil al hacer clic en un enlace
+  document.querySelectorAll("#mobile-menu a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+      mobileMenu.classList.remove("active");
+      menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+    });
   });
-});
 
-// Toggle menú móvil
-const menuToggle = document.querySelector(".menu-toggle");
-const mobileMenu = document.getElementById("mobile-menu");
-menuToggle.addEventListener("click", () => {
-  mobileMenu.classList.toggle("hidden");
-  mobileMenu.classList.toggle("active");
-  menuToggle.innerHTML = mobileMenu.classList.contains("hidden") ? '<i class="fas fa-bars text-2xl"></i>' : '<i class="fas fa-times text-2xl"></i>';
-});
-
-// Cerrar menú móvil al hacer clic en un enlace
-document.querySelectorAll("#mobile-menu a").forEach((link) => {
-  link.addEventListener("click", () => {
-    mobileMenu.classList.add("hidden");
-    mobileMenu.classList.remove("active");
-    menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
-  });
-});
-
-// Desplazamiento suave para enlaces de anclaje
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    if (this.id !== "admin-link" && this.id !== "admin-link-mobile") {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute("href"));
-      const headerHeight = document.querySelector("header").offsetHeight;
-      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth"
+  // Desplazamiento suave para enlaces de anclaje, excluyendo admin
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    if (anchor.id !== "admin-link" && anchor.id !== "admin-link-mobile") {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          const headerHeight = document.querySelector("header").offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth"
+          });
+        }
       });
     }
   });
