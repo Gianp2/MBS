@@ -78,6 +78,7 @@
   // Escuchar turnos en tiempo real
   function escucharTurnos(callback) {
     db.collection("turnos").onSnapshot((snapshot) => {
+      console.log("Snapshot recibido, documentos:", snapshot.size);
       const turnos = [];
       snapshot.forEach((doc) => {
         turnos.push({ id: doc.id, ...doc.data() });
@@ -222,7 +223,6 @@
         timer: 1500,
         showConfirmButton: false
       });
-      // Forzar actualización de la tabla
       mostrarTurnosAdmin();
     } catch (error) {
       console.error("Error al eliminar turno: ", error.code, error.message);
@@ -237,10 +237,22 @@
 
   // Actualizar turno
   async function updateTurno(id, disponible, nombre = "", telefono = "") {
+    if (!id) {
+      console.error("ID de turno inválido en updateTurno:", id);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "ID de turno inválido. No se pudo actualizar.",
+        confirmButtonColor: "#facc15"
+      });
+      return;
+    }
     try {
+      console.log("Actualizando turno con ID:", id, "Disponible:", disponible, "Nombre:", nombre, "Teléfono:", telefono);
       const turnoRef = db.collection("turnos").doc(id);
       const doc = await turnoRef.get();
       if (!doc.exists) {
+        console.error("El turno no existe en Firestore, ID:", id);
         throw new Error("El turno no existe");
       }
       await turnoRef.update({
@@ -248,6 +260,7 @@
         nombre: disponible === "Sí" ? "" : nombre,
         telefono: disponible === "Sí" ? "" : telefono
       });
+      console.log("Turno actualizado con éxito, ID:", id);
       Swal.fire({
         icon: "success",
         title: "Turno actualizado",
@@ -255,12 +268,13 @@
         timer: 1500,
         showConfirmButton: false
       });
+      mostrarTurnosAdmin();
     } catch (error) {
-      console.error("Error al actualizar turno: ", error);
+      console.error("Error al actualizar turno: ", error.code, error.message);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
+        text: `No se pudo actualizar el turno: ${error.message || "Error desconocido"}`,
         confirmButtonColor: "#facc15"
       });
     }
@@ -415,8 +429,60 @@
 
   // Manejar toggle disponible
   async function handleToggleDisponible(id, currentDisponible) {
+    if (!id) {
+      console.error("ID de turno inválido en handleToggleDisponible:", id);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "ID de turno inválido. No se pudo actualizar.",
+        confirmButtonColor: "#facc15"
+      });
+      return;
+    }
     const nuevoEstado = currentDisponible === "Sí" ? "No" : "Sí";
-    await updateTurno(id, nuevoEstado);
+    if (nuevoEstado === "No") {
+      // Si marcamos como no disponible, pedimos nombre y teléfono
+      Swal.fire({
+        title: "Marcar como No Disponible",
+        html: `
+          <div class="text-left space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-user mr-2"></i>Nombre:</label>
+              <input type="text" id="toggleNombre" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Nombre del cliente">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-phone mr-2"></i>Teléfono:</label>
+              <input type="tel" id="toggleTelefono" pattern="[0-9]{10,}" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Ej: 3471511010">
+            </div>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#facc15",
+        cancelButtonColor: "#e3342f",
+        width: "32rem",
+        background: "#1f2937",
+        color: "#e5e7eb",
+        preConfirm: () => {
+          const nombre = document.getElementById("toggleNombre").value;
+          const telefono = document.getElementById("toggleTelefono").value;
+          if (!nombre || !telefono) {
+            Swal.showValidationMessage("Por favor, ingresa nombre y teléfono");
+            return false;
+          }
+          return { nombre, telefono };
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const { nombre, telefono } = result.value;
+          await updateTurno(id, nuevoEstado, nombre, telefono);
+        }
+      });
+    } else {
+      // Si marcamos como disponible, no se necesitan nombre ni teléfono
+      await updateTurno(id, nuevoEstado);
+    }
   }
 
   // Manejar edición de nombre
@@ -500,26 +566,57 @@
           return false;
         }
 
+        const formattedFecha = formatDate(fecha);
         const turnos = await obtenerTurnos();
-        const turnoExists = turnos.some(t => t.fecha === formatDate(fecha) && t.hora === hora && t.id !== id);
+        const turnoExists = turnos.some(t => t.fecha === formattedFecha && t.hora === hora && t.id !== id);
         if (turnoExists) {
           Swal.showValidationMessage("Ya existe un turno en esa fecha y hora.");
           return false;
         }
 
-        return { fecha, hora, nombre, telefono };
+        return { fecha: formattedFecha, hora, nombre, telefono, originalFecha: currentFecha, originalHora: currentHora };
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const { fecha, hora, nombre, telefono } = result.value;
+        const { fecha, hora, nombre, telefono, originalFecha, originalHora } = result.value;
         try {
-          await db.collection("turnos").doc(id).set({
-            fecha: formatDate(fecha),
-            hora: hora,
-            Disponible: "No",
-            nombre: nombre,
-            telefono: telefono
+          await db.runTransaction(async (transaction) => {
+            const turnoRef = db.collection("turnos").doc(id);
+            const turnoDoc = await turnoRef.get();
+            if (!turnoDoc.exists) {
+              throw new Error("El turno no existe");
+            }
+
+            // Si la fecha u hora cambió, crear un nuevo turno disponible en la fecha/hora original
+            if (fecha !== originalFecha || hora !== originalHora) {
+              const originalTurnoExists = (await db.collection("turnos")
+                .where("fecha", "==", originalFecha)
+                .where("hora", "==", originalHora)
+                .get()).empty;
+              if (originalTurnoExists) {
+                const newTurnoRef = db.collection("turnos").doc();
+                transaction.set(newTurnoRef, {
+                  fecha: originalFecha,
+                  hora: originalHora,
+                  Disponible: "Sí",
+                  nombre: "",
+                  telefono: ""
+                });
+                console.log("Creado nuevo turno disponible en fecha original:", originalFecha, originalHora);
+              }
+            }
+
+            // Actualizar el turno existente con los nuevos datos
+            transaction.set(turnoRef, {
+              fecha: fecha,
+              hora: hora,
+              Disponible: "No",
+              nombre: nombre,
+              telefono: telefono
+            });
+            console.log("Turno actualizado con ID:", id, "Nueva fecha:", fecha, "Nueva hora:", hora);
           });
+
           Swal.fire({
             icon: "success",
             title: "Turno actualizado",
@@ -527,12 +624,13 @@
             timer: 1500,
             showConfirmButton: false
           });
+          mostrarTurnosAdmin();
         } catch (error) {
-          console.error("Error al actualizar turno: ", error);
+          console.error("Error al actualizar turno: ", error.code, error.message);
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "No se pudo actualizar el turno. Inténtalo de nuevo.",
+            text: `No se pudo actualizar el turno: ${error.message || "Error desconocido"}`,
             confirmButtonColor: "#facc15"
           });
         }
