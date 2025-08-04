@@ -97,14 +97,18 @@
           MBS <span class="text-yellow-400 drop-shadow-glow">Barber</span> Studio
         </h1>
       </div>
-
+      <nav class="hidden md:flex space-x-8" aria-label="Navegación principal">
+        <a href="javascript:void(0)" id="admin-link" class="nav-link admin font-medium font-['Poppins']"><i class="fas fa-user-shield mr-2"></i>Admin</a>
+      </nav>
       <button class="md:hidden menu-toggle" aria-label="Abrir menú móvil">
         <i class="fas fa-bars text-2xl"></i>
       </button>
     </div>
+    <nav class="hidden md:hidden flex-col" id="mobile-menu" aria-label="Menú móvil">
+      <a href="javascript:void(0)" id="admin-link-mobile" class="nav-link admin font-['Poppins']"><i class="fas fa-user-shield mr-2"></i>Admin</a>
+    </nav>
   </header>
   <main>
-    <!-- Secciones del sitio (Inicio, Servicios, etc.) -->
     <section id="turnos" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-8 font-['Poppins'] text-gray-200">Reservar Turno</h2>
@@ -175,18 +179,12 @@
           <a href="https://www.instagram.com/mbsbarberstudio/" target="_blank" rel="noopener" class="text-3xl hover:text-yellow-400 transition-colors"><i class="fab fa-instagram"></i></a>
           <a href="https://wa.me/+5493471511010" target="_blank" rel="noopener" class="text-3xl hover:text-yellow-400 transition-colors"><i class="fab fa-whatsapp"></i></a>
         </div>
-      </div>
-      <div class="border-t border-gray-700 mt-10 pt-6 text-center">
-        <p class="text-sm text-gray-300">&copy; 2025 MBS Barber Studio. Todos los derechos reservados.</p>
-      </div>
-    </div>
-  </footer>
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center">
+          <p class="text-sm text-gray-300">&copy; 2025 MBS Barber Studio. Todos los derechos reservados.</p>
+        </div>
       </div>
     </div>
   </footer>
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
