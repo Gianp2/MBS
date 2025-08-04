@@ -110,14 +110,6 @@ async function guardarTurno(turno) {
   }
 }
 
-// Generar ID secuencial para un turno
-async function generarIdTurno() {
-  const turnos = await obtenerTurnos();
-  const ids = turnos.map(t => parseInt(t.id) || 0);
-  const maxId = Math.max(...ids, 0);
-  return (maxId + 1).toString();
-}
-
 // Generar turnos para una fecha específica
 async function generarTurnos() {
   const fechaGenerar = document.getElementById("fechaGenerar").value;
@@ -161,9 +153,7 @@ async function generarTurnos() {
   const nuevosTurnos = [];
   for (const hora of horarios) {
     if (!turnosExistentes.has(hora)) {
-      const id = await generarIdTurno();
       nuevosTurnos.push({
-        id: id,
         fecha: formattedDate,
         hora: hora,
         Disponible: "Sí",
@@ -222,12 +212,12 @@ async function deleteTurno(id) {
 // Actualizar turno
 async function updateTurno(id, disponible, nombre = "", telefono = "") {
   try {
-    const turnos = await obtenerTurnos();
-    const turno = turnos.find(t => t.id === id);
-    if (!turno) {
-      throw new Error("Turno no encontrado");
+    const turnoRef = db.collection("turnos").doc(id);
+    const doc = await turnoRef.get();
+    if (!doc.exists) {
+      throw new Error("El turno no existe");
     }
-    await db.collection("turnos").doc(id).update({
+    await turnoRef.update({
       Disponible: disponible,
       nombre: disponible === "Sí" ? "" : nombre,
       telefono: disponible === "Sí" ? "" : telefono
@@ -522,7 +512,7 @@ async function importTurnos() {
             throw new Error("El archivo no contiene una lista válida de turnos.");
           }
           const isValid = importedTurnos.every(t => 
-            t.id && t.fecha && t.hora && t.Disponible && 
+            t.fecha && t.hora && t.Disponible && 
             (t.Disponible === "Sí" || (t.nombre && t.telefono))
           );
           if (!isValid) {
@@ -532,8 +522,7 @@ async function importTurnos() {
           for (const turno of importedTurnos) {
             const turnoExists = existingTurnos.some(t => t.fecha === turno.fecha && t.hora === turno.hora);
             if (!turnoExists) {
-              const newId Shadows
-              await db.collection("turnos").doc(newId).set({ ...turno, id: newId });
+              await db.collection("turnos").add(turno);
             }
           }
           Swal.fire({
@@ -732,7 +721,7 @@ async function updateTimeSlots() {
   }
 }
 
-// Manejar reserva de turno
+// Manejar reserva de turno con transacción
 async function reservarTurno(event) {
   event.preventDefault();
   const nombre = document.getElementById("nombre").value;
@@ -763,30 +752,25 @@ async function reservarTurno(event) {
 
   const formattedDate = formatDate(fecha);
   try {
-    const querySnapshot = await db.collection("turnos")
-      .where("fecha", "==", formattedDate)
-      .where("hora", "==", hora)
-      .where("Disponible", "==", "Sí")
-      .get();
-    let turno = null;
-    querySnapshot.forEach((doc) => {
-      turno = { id: doc.id, ...doc.data() };
-    });
+    await db.runTransaction(async (transaction) => {
+      const querySnapshot = await db.collection("turnos")
+        .where("fecha", "==", formattedDate)
+        .where("hora", "==", hora)
+        .where("Disponible", "==", "Sí")
+        .get();
 
-    if (!turno) {
-      Swal.fire({
-        icon: "warning",
-        title: "Horario no disponible",
-        text: "El turno seleccionado ya no está disponible. Por favor, elige otro horario.",
-        confirmButtonColor: "#facc15"
+      if (querySnapshot.empty) {
+        throw new Error("El turno seleccionado ya no está disponible o no existe.");
+      }
+
+      const turnoDoc = querySnapshot.docs[0];
+      const turnoId = turnoDoc.id;
+
+      transaction.update(db.collection("turnos").doc(turnoId), {
+        nombre: nombre,
+        telefono: telefono,
+        Disponible: "No"
       });
-      return;
-    }
-
-    await db.collection("turnos").doc(turno.id).update({
-      nombre: nombre,
-      telefono: telefono,
-      Disponible: "No"
     });
 
     Swal.fire({
@@ -806,7 +790,7 @@ async function reservarTurno(event) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "No se pudo reservar el turno. Inténtalo de nuevo.",
+      text: error.message || "No se pudo reservar el turno. Inténtalo de nuevo.",
       confirmButtonColor: "#facc15"
     });
   }
