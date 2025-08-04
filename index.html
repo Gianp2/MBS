@@ -599,7 +599,7 @@
     const horariosManana = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00"];
     const horariosTarde = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"];
     const horarios = [...horariosManana, ...horariosTarde];
-    const diasHabilitados = [2, 3, 4, 5, 6];
+    const diasHabilitados = [2, 3, 4, 5, 6]; // Martes a sábado
 
     // Parsear fecha desde DD/MM/YYYY o YYYY-MM-DD a Date
     function parseDMY(dateStr) {
@@ -836,16 +836,17 @@
 
     // Login con Firebase Authentication
     async function login(email, password) {
+      console.log("Intentando login con:", email);
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         console.log("Usuario logueado: ", userCredential.user.email);
         mostrarTurnosAdmin();
       } catch (error) {
-        console.error("Error en login: ", error.message);
+        console.error("Error en login: ", error.code, error.message);
         Swal.fire({
           icon: "error",
           title: "Error de autenticación",
-          text: error.message === "Firebase: Error (auth/invalid-credential)." 
+          text: error.code === "auth/invalid-credential" 
             ? "Correo o contraseña incorrectos."
             : "No se pudo iniciar sesión. Inténtalo de nuevo.",
           confirmButtonColor: "#facc15"
@@ -879,6 +880,7 @@
 
     // Mostrar prompt de login para administrador
     function mostrarPromptClave() {
+      console.log("Mostrando prompt de login");
       Swal.fire({
         title: "Acceso Administrativo",
         html: `
@@ -904,6 +906,14 @@
           const { email, password } = result.value;
           login(email, password);
         }
+      }).catch((error) => {
+        console.error("Error en el prompt de login: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo mostrar el formulario de login. Inténtalo de nuevo.",
+          confirmButtonColor: "#facc15"
+        });
       });
     }
 
@@ -1388,6 +1398,28 @@
 
     // Inicializar eventos y restricciones de fecha
     document.addEventListener("DOMContentLoaded", () => {
+      console.log("DOM completamente cargado");
+
+      // Verificar elementos del DOM
+      const adminLink = document.getElementById("admin-link");
+      const adminLinkMobile = document.getElementById("admin-link-mobile");
+      if (!adminLink) console.error("Elemento con ID 'admin-link' no encontrado");
+      if (!adminLinkMobile) console.error("Elemento con ID 'admin-link-mobile' no encontrado");
+
+      // Vincular eventos de los enlaces de administración
+      if (adminLink) {
+        adminLink.addEventListener("click", () => {
+          console.log("Botón Admin clicado");
+          mostrarPromptClave();
+        });
+      }
+      if (adminLinkMobile) {
+        adminLinkMobile.addEventListener("click", () => {
+          console.log("Botón Admin móvil clicado");
+          mostrarPromptClave();
+        });
+      }
+
       const fechaInput = document.getElementById("fecha");
       const horaSelect = document.getElementById("hora");
       const today = new Date();
@@ -1430,10 +1462,6 @@
 
       horaSelect.disabled = true;
 
-      // Vincular eventos de los enlaces de administración
-      document.getElementById("admin-link").addEventListener("click", mostrarPromptClave);
-      document.getElementById("admin-link-mobile").addEventListener("click", mostrarPromptClave);
-
       // Vincular botones de administración
       document.getElementById("generarTurnos").addEventListener("click", generarTurnos);
       document.getElementById("refreshTurnos").addEventListener("click", mostrarTurnosAdmin);
@@ -1468,15 +1496,17 @@
     // Desplazamiento suave para enlaces de anclaje
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute("href"));
-        const headerHeight = document.querySelector("header").offsetHeight;
-        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        if (this.id !== "admin-link" && this.id !== "admin-link-mobile") {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          const headerHeight = document.querySelector("header").offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth"
-        });
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth"
+          });
+        }
       });
     });
   </script>
