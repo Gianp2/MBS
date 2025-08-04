@@ -249,12 +249,28 @@
       mostrarTurnosAdmin();
     } catch (error) {
       console.error("Error en login: ", error.code, error.message);
+      let errorMessage;
+      switch (error.code) {
+        case "auth/invalid-login-credentials":
+        case "auth/invalid-credential":
+          errorMessage = "Correo o contraseña incorrectos.";
+          break;
+        case "auth/user-disabled":
+          errorMessage = "Esta cuenta está deshabilitada. Contacta al administrador.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Demasiados intentos fallidos. Intenta de nuevo más tarde.";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Error de red. Verifica tu conexión e intenta de nuevo.";
+          break;
+        default:
+          errorMessage = "No se pudo iniciar sesión. Inténtalo de nuevo.";
+      }
       Swal.fire({
         icon: "error",
         title: "Error de autenticación",
-        text: error.code === "auth/invalid-credential" 
-          ? "Correo o contraseña incorrectos."
-          : "No se pudo iniciar sesión. Inténtalo de nuevo.",
+        text: errorMessage,
         confirmButtonColor: "#facc15"
       });
     }
@@ -301,7 +317,6 @@
               class="w-full p-3 pl-10 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 font-['Open Sans'] transition-all duration-300" 
               placeholder="admin@ejemplo.com" 
               aria-label="Correo electrónico del administrador"
-              autofocus
             >
             <i class="fas fa-envelope absolute left-3 top-[2.8rem] text-gray-400"></i>
           </div>
@@ -336,7 +351,12 @@
         cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
       },
       didOpen: () => {
-        document.getElementById("adminEmail").focus();
+        setTimeout(() => {
+          const emailInput = document.getElementById("adminEmail");
+          if (emailInput) {
+            emailInput.focus();
+          }
+        }, 100);
       },
       preConfirm: () => {
         const email = document.getElementById("adminEmail").value;
