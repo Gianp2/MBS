@@ -290,11 +290,34 @@
     Swal.fire({
       title: "Acceso Administrativo",
       html: `
-        <div class="text-left">
-          <label class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']">Correo electrónico:</label>
-          <input type="email" id="adminEmail" class="swal2-input w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Correo electrónico">
-          <label class="block text-sm font-medium mb-2 mt-4 text-gray-200 font-['Poppins']">Contraseña:</label>
-          <input type="password" id="adminPassword" class="swal2-input w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Contraseña">
+        <div class="text-left space-y-6 p-4">
+          <div class="relative">
+            <label for="adminEmail" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins'] flex items-center gap-2">
+              <i class="fas fa-envelope text-yellow-400"></i> Correo Electrónico
+            </label>
+            <input 
+              type="email" 
+              id="adminEmail" 
+              class="w-full p-3 pl-10 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 font-['Open Sans'] transition-all duration-300" 
+              placeholder="admin@ejemplo.com" 
+              aria-label="Correo electrónico del administrador"
+              autofocus
+            >
+            <i class="fas fa-envelope absolute left-3 top-[2.8rem] text-gray-400"></i>
+          </div>
+          <div class="relative">
+            <label for="adminPassword" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins'] flex items-center gap-2">
+              <i class="fas fa-lock text-yellow-400"></i> Contraseña
+            </label>
+            <input 
+              type="password" 
+              id="adminPassword" 
+              class="w-full p-3 pl-10 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 font-['Open Sans'] transition-all duration-300" 
+              placeholder="••••••••" 
+              aria-label="Contraseña del administrador"
+            >
+            <i class="fas fa-lock absolute left-3 top-[2.8rem] text-gray-400"></i>
+          </div>
         </div>
       `,
       showCancelButton: true,
@@ -305,11 +328,25 @@
       width: "32rem",
       background: "#1f2937",
       color: "#e5e7eb",
+      focusConfirm: false,
+      customClass: {
+        popup: "rounded-xl shadow-2xl",
+        title: "text-2xl font-bold font-['Poppins'] text-gray-200",
+        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105",
+        cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
+      },
+      didOpen: () => {
+        document.getElementById("adminEmail").focus();
+      },
       preConfirm: () => {
         const email = document.getElementById("adminEmail").value;
         const password = document.getElementById("adminPassword").value;
         if (!email || !password) {
           Swal.showValidationMessage("Por favor, ingresa correo y contraseña");
+          return false;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          Swal.showValidationMessage("Por favor, ingresa un correo electrónico válido");
           return false;
         }
         return { email, password };
@@ -647,13 +684,19 @@
 
   // Copiar alias al portapapeles
   function copiarAlias() {
-    const alias = document.getElementById("alias-text").textContent;
+    const alias = document.getElementById("alias-text")?.textContent;
+    if (!alias) {
+      console.error("Elemento con ID 'alias-text' no encontrado");
+      return;
+    }
     navigator.clipboard.writeText(alias).then(() => {
       const button = document.querySelector(".copy-button");
-      button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado';
-      setTimeout(() => {
-        button.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar alias';
-      }, 2000);
+      if (button) {
+        button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado';
+        setTimeout(() => {
+          button.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar alias';
+        }, 2000);
+      }
     }).catch((err) => {
       console.error("Error al copiar alias:", err);
       Swal.fire({
@@ -926,23 +969,5 @@
         mobileMenu.classList.remove("active");
         menuToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
       });
-    });
-
-    // Desplazamiento suave para enlaces de anclaje, excluyendo admin
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      if (anchor.id !== "admin-link" && anchor.id !== "admin-link-mobile") {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            const headerHeight = document.querySelector("header").offsetHeight;
-            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-            window.scrollTo({
-              top: targetPosition,
-              behavior: "smooth"
-            });
-          }
-        });
-      }
     });
   });
