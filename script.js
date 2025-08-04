@@ -556,7 +556,7 @@ function mostrarTurnosAdmin() {
     listaMobile.innerHTML = "";
 
     if (turnos.length === 0) {
-      lista.innerHTML = `<tr><td colspan="6" class="text-center">No se encontraron turnos. Genera turnos para comenzar.</td></tr>`;
+      lista.innerHTML = `<tr><td colspan="5" class="text-center">No se encontraron turnos. Genera turnos para comenzar.</td></tr>`;
       listaMobile.innerHTML = `<p class="text-center text-gray-200">No se encontraron turnos. Genera turnos para comenzar.</p>`;
       document.getElementById("admin-modal").classList.add("active");
       return;
@@ -577,10 +577,9 @@ function mostrarTurnosAdmin() {
       const telefono = t.telefono || "";
       const estado = disponible === "Sí" ? '<span style="color: #10b981;">Disponible</span>' : nombre ? '<span style="color: #facc15;">Reservado</span>' : '<span style="color: #e3342f;">No Disponible</span>';
 
-      // Fila para la tabla (escritorio)
+      // Fila para la tabla (escritorio) - Sin columna ID
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${id}</td>
         <td>${fecha}</td>
         <td>${hora}</td>
         <td>${estado}</td>
@@ -599,11 +598,10 @@ function mostrarTurnosAdmin() {
       `;
       lista.appendChild(row);
 
-      // Tarjeta para móviles
+      // Tarjeta para móviles - Sin ID
       const card = document.createElement("div");
       card.className = "turno-card";
       card.innerHTML = `
-        <p><strong>ID:</strong> ${id}</p>
         <p><strong>Fecha:</strong> ${fecha}</p>
         <p><strong>Hora:</strong> ${hora}</p>
         <p><strong>Estado:</strong> ${estado}</p>
