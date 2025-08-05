@@ -943,11 +943,11 @@
     const fecha = document.getElementById("fecha").value;
     const hora = document.getElementById("hora").value;
 
-    if (!fecha || !hora) {
+    if (!fecha || !hora || !nombre || !telefono) {
       Swal.fire({
         icon: "warning",
         title: "Faltan datos",
-        text: "Por favor, selecciona una fecha y hora válidas.",
+        text: "Por favor, completa todos los campos.",
         confirmButtonColor: "#facc15"
       });
       return;
@@ -974,40 +974,66 @@
           .get();
 
         if (querySnapshot.empty) {
-          throw new Error("El turno seleccionado ya no está disponible o no existe.");
+          throw new Error("El turno ya no está disponible o no existe.");
         }
 
         const turnoDoc = querySnapshot.docs[0];
         const turnoId = turnoDoc.id;
 
-        transaction.update(db.collection("turnos").doc(turnoId), {
+        // Verificar nuevamente que el turno esté disponible
+        const turnoRef = db.collection("turnos").doc(turnoId);
+        const turnoSnap = await transaction.get(turnoRef);
+        if (!turnoSnap.exists()) {
+          throw new Error("El turno no existe.");
+        }
+        if (turnoSnap.data().Disponible !== "Sí") {
+          throw new Error("El turno ya fue reservado.");
+        }
+
+        // Actualizar el turno
+        transaction.update(turnoRef, {
           nombre: nombre,
           telefono: telefono,
-          Disponible: "No"
+          Disponible: "No",
+          fechaReserva: firebase.firestore.FieldValue.serverTimestamp()
         });
+        console.log("Turno reservado con éxito, ID:", turnoId);
       });
 
       Swal.fire({
         icon: "success",
         title: "Turno reservado",
-        text: "Tu turno ha sido reservado con éxito.",
+        text: "Tu turno ha sido reservado con éxito. Ahora puedes confirmar por WhatsApp.",
         timer: 2000,
         showConfirmButton: false
       });
+      // Enviar mensaje de WhatsApp
+      enviarMensajeWhatsapp(nombre, formattedDate, hora);
       document.getElementById("reserva-form").reset();
       document.getElementById("fecha").value = "";
       document.getElementById("hora").innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
       document.getElementById("hora").disabled = true;
       await updateTimeSlots();
     } catch (error) {
-      console.error("Error al reservar turno: ", error);
+      console.error("Error al reservar turno: ", error.code, error.message);
       Swal.fire({
         icon: "error",
         title: "Error",
         text: error.message || "No se pudo reservar el turno. Inténtalo de nuevo.",
         confirmButtonColor: "#facc15"
       });
+      // Refrescar la lista de horarios disponibles
+      await updateTimeSlots();
     }
+  }
+
+  // Enviar mensaje de WhatsApp
+  function enviarMensajeWhatsapp(nombre, fecha, hora) {
+    const telefono = "5493471511010"; // Número de destino (código de país + número)
+    const mensaje = `Hola, soy ${nombre}. Quiero confirmar mi turno para el ${fecha} a las ${hora}.`;
+    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank"); // Abre WhatsApp Web o app móvil
+    console.log("Abriendo WhatsApp con mensaje:", mensaje);
   }
 
   // Inicializar eventos y restricciones de fecha
@@ -1103,6 +1129,12 @@
       closeModalBtn.addEventListener("click", () => {
         document.getElementById("admin-modal").classList.remove("active");
       });
+    }
+
+    // Vincular formulario de reserva
+    const reservaForm = document.getElementById("reserva-form");
+    if (reservaForm) {
+      reservaForm.addEventListener("submit", reservarTurno);
     }
 
     // Toggle menú móvil
