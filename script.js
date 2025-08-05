@@ -768,7 +768,8 @@ function mostrarTurnosAdmin(selectedDate = "") {
     // Filtrar turnos por fecha seleccionada
     let filteredTurnos = turnos;
     if (selectedDate) {
-      filteredTurnos = turnos.filter(t => t.fecha === formatDate(selectedDate));
+      const formattedSelectedDate = formatDate(selectedDate);
+      filteredTurnos = turnos.filter(t => t.fecha === formattedSelectedDate);
     }
 
     if (filteredTurnos.length === 0) {
@@ -1142,7 +1143,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (dateFilterInput) {
     dateFilterInput.addEventListener("change", (e) => {
-      mostrarTurnosAdmin(e.target.value);
+      const selectedDate = e.target.value;
+      mostrarTurnosAdmin(selectedDate);
+      // Actualizar el valor del input para mantener la consistencia
+      dateFilterInput.value = selectedDate;
     });
   }
 
