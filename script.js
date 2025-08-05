@@ -762,34 +762,23 @@
     escucharTurnos((turnos) => {
       const lista = document.getElementById("listaTurnosAdmin");
       const listaMobile = document.getElementById("turnos-mobile");
-      const filtroFecha = document.getElementById("filtroFecha").value;
       lista.innerHTML = "";
       listaMobile.innerHTML = "";
 
-      // Filtrar turnos por fecha seleccionada y reservas (Disponible: "No")
-      let filteredTurnos = turnos.filter(t => t.Disponible === "No");
-      if (filtroFecha) {
-        const formattedFiltroFecha = formatDate(filtroFecha);
-        filteredTurnos = filteredTurnos.filter(t => t.fecha === formattedFiltroFecha);
-      }
-
-      if (filteredTurnos.length === 0) {
-        const mensaje = filtroFecha 
-          ? `No se encontraron reservas para ${formatDate(filtroFecha)}.`
-          : "No se encontraron reservas. Genera turnos o selecciona una fecha.";
-        lista.innerHTML = `<tr><td colspan="5" class="text-center">${mensaje}</td></tr>`;
-        listaMobile.innerHTML = `<p class="text-center text-gray-200">${mensaje}</p>`;
+      if (turnos.length === 0) {
+        lista.innerHTML = `<tr><td colspan="5" class="text-center">No se encontraron turnos. Genera turnos para comenzar.</td></tr>`;
+        listaMobile.innerHTML = `<p class="text-center text-gray-200">No se encontraron turnos. Genera turnos para comenzar.</p>`;
         document.getElementById("admin-modal").classList.add("active");
         return;
       }
 
-      filteredTurnos.sort((a, b) => {
+      turnos.sort((a, b) => {
         const dateA = parseDMY(a.fecha);
         const dateB = parseDMY(b.fecha);
         return dateA - dateB || a.hora.localeCompare(b.hora);
       });
 
-      filteredTurnos.forEach((t) => {
+      turnos.forEach((t) => {
         const id = t.id || "";
         const fecha = t.fecha ? formatDate(t.fecha) : "Fecha no disponible";
         const hora = t.hora || "Hora no disponible";
@@ -798,7 +787,7 @@
         const telefono = t.telefono || "";
         const estado = disponible === "Sí" ? '<span style="color: #10b981;">Disponible</span>' : nombre ? '<span style="color: #facc15;">Reservado</span>' : '<span style="color: #e3342f;">No Disponible</span>';
 
-        // Fila para la tabla (escritorio)
+        // Fila para la tabla (escritorio) - Sin columna ID
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${fecha}</td>
@@ -819,7 +808,7 @@
         `;
         lista.appendChild(row);
 
-        // Tarjeta para móviles
+        // Tarjeta para móviles - Sin ID
         const card = document.createElement("div");
         card.className = "turno-card";
         card.innerHTML = `
@@ -1040,25 +1029,25 @@
 
   // Enviar mensaje de WhatsApp
   function enviarMensajeWhatsapp(nombre, fecha, hora) {
-    const telefono = "5493471511010";
+    const telefono = "5493471511010"; // Número de destino (código de país + número)
     const mensaje = `Hola, soy ${nombre}. Quiero confirmar mi turno para el ${fecha} a las ${hora}.`;
     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, "_blank");
+    window.open(url, "_blank"); // Abre WhatsApp Web o app móvil
     console.log("Abriendo WhatsApp con mensaje:", mensaje);
   }
 
   // Inicializar eventos y restricciones de fecha
   document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM completamente cargado");
-    console.log("Verificando elementos del DOM...");
 
+    // Verificar elementos del DOM
     const adminLink = document.getElementById("admin-link");
     const adminLinkMobile = document.getElementById("admin-link-mobile");
-
+    
     if (!adminLink) {
       console.error("Elemento con ID 'admin-link' no encontrado");
     } else {
-      console.log("Vinculando evento a admin-link...");
+      console.log("Elemento 'admin-link' encontrado, vinculando evento...");
       adminLink.addEventListener("click", (e) => {
         e.preventDefault();
         console.log("Botón Admin clicado (escritorio)");
@@ -1069,7 +1058,7 @@
     if (!adminLinkMobile) {
       console.error("Elemento con ID 'admin-link-mobile' no encontrado");
     } else {
-      console.log("Vinculando evento a admin-link-mobile...");
+      console.log("Elemento 'admin-link-mobile' encontrado, vinculando evento...");
       adminLinkMobile.addEventListener("click", (e) => {
         e.preventDefault();
         console.log("Botón Admin móvil clicado");
@@ -1130,7 +1119,6 @@
     const importTurnosBtn = document.getElementById("importTurnos");
     const logoutBtn = document.getElementById("logout");
     const closeModalBtn = document.querySelector("#admin-modal .close-modal");
-    const filtroFecha = document.getElementById("filtroFecha");
 
     if (generarTurnosBtn) generarTurnosBtn.addEventListener("click", generarTurnos);
     if (refreshTurnosBtn) refreshTurnosBtn.addEventListener("click", mostrarTurnosAdmin);
@@ -1141,9 +1129,6 @@
       closeModalBtn.addEventListener("click", () => {
         document.getElementById("admin-modal").classList.remove("active");
       });
-    }
-    if (filtroFecha) {
-      filtroFecha.addEventListener("change", mostrarTurnosAdmin);
     }
 
     // Vincular formulario de reserva
