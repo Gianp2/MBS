@@ -447,11 +447,11 @@ async function handleToggleDisponible(id, currentDisponible) {
       html: `
         <div class="text-left space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-user mr-2"></i>Nombre:</label>
+            <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-user mr-2 text-yellow-400"></i>Nombre:</label>
             <input type="text" id="toggleNombre" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Nombre del cliente">
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-phone mr-2"></i>Teléfono:</label>
+            <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-phone mr-2 text-yellow-400"></i>Teléfono:</label>
             <input type="tel" id="toggleTelefono" pattern="[0-9]{10,}" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Ej: 3471511010">
           </div>
         </div>
@@ -517,21 +517,21 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
     html: `
       <div class="text-left space-y-4">
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-alt mr-2"></i>Fecha:</label>
+          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-alt mr-2 text-yellow-400"></i>Fecha:</label>
           <input type="date" id="editFecha" value="${formatDateToISO(parseDMY(currentFecha))}" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-clock mr-2"></i>Hora:</label>
+          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-clock mr-2 text-yellow-400"></i>Hora:</label>
           <select id="editHora" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             ${horarios.map(h => `<option value="${h}" ${h === currentHora ? "selected" : ""}>${h}</option>`).join("")}
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-user mr-2"></i>Nombre:</label>
+          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-user mr-2 text-yellow-400"></i>Nombre:</label>
           <input type="text" id="editNombre" value="${currentNombre}" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Nombre del cliente">
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-phone mr-2"></i>Teléfono:</label>
+          <label class="block text-sm font-medium mb-1 text-gray-200 font-['Poppins']"><i class="fas fa-phone mr-2 text-yellow-400"></i>Teléfono:</label>
           <input type="tel" id="editTelefono" value="${currentTelefono}" pattern="[0-9]{10,}" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Ej: 3471511010">
         </div>
       </div>
@@ -846,32 +846,6 @@ function mostrarTurnosAdmin(selectedDate = "") {
   });
 }
 
-// Copiar alias al portapapeles
-function copiarAlias() {
-  const alias = document.getElementById("alias-text")?.textContent;
-  if (!alias) {
-    console.error("Elemento con ID 'alias-text' no encontrado");
-    return;
-  }
-  navigator.clipboard.writeText(alias).then(() => {
-    const button = document.querySelector(".copy-button");
-    if (button) {
-      button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado';
-      setTimeout(() => {
-        button.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar alias';
-      }, 2000);
-    }
-  }).catch((err) => {
-    console.error("Error al copiar alias:", err);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "No se pudo copiar el alias. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15"
-    });
-  });
-}
-
 // Actualizar horarios disponibles para clientes
 async function updateTimeSlots() {
   const fechaInput = document.getElementById("fecha");
@@ -1129,7 +1103,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const importTurnosBtn = document.getElementById("importTurnos");
   const logoutBtn = document.getElementById("logout");
   const closeModalBtn = document.querySelector("#admin-modal .close-modal");
-  const fechaFiltroInput = document.getElementById("fechaFiltro");
+  const fechaGenerarInput = document.getElementById("fechaGenerar");
+
+  // Añadir campo fechaFiltro dinámicamente si no existe
+  let fechaFiltroInput = document.getElementById("fechaFiltro");
+  if (!fechaFiltroInput) {
+    const filterDiv = document.createElement("div");
+    filterDiv.className = "mb-4";
+    filterDiv.innerHTML = `
+      <label for="fechaFiltro" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-check mr-2 text-yellow-400"></i>Filtrar Turnos por Fecha:</label>
+      <div class="flex gap-2">
+        <input type="date" id="fechaFiltro" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+        <button id="limpiarFiltro" class="px-4 py-2 rounded-lg bg-gray-600 text-white font-['Poppins'] font-semibold hover:bg-gray-700 transition-all duration-300">Limpiar Filtro</button>
+      </div>
+    `;
+    const modalContent = document.querySelector("#admin-modal .modal-content");
+    const actionBar = document.querySelector("#admin-modal .action-bar");
+    if (modalContent && actionBar) {
+      modalContent.insertBefore(filterDiv, actionBar.nextSibling);
+    }
+    fechaFiltroInput = document.getElementById("fechaFiltro");
+  }
 
   if (generarTurnosBtn) generarTurnosBtn.addEventListener("click", generarTurnos);
   if (refreshTurnosBtn) refreshTurnosBtn.addEventListener("click", () => mostrarTurnosAdmin());
@@ -1145,8 +1139,15 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaFiltroInput.addEventListener("change", (e) => {
       const selectedDate = e.target.value;
       mostrarTurnosAdmin(selectedDate);
-      // Actualizar el valor del input para mantener la consistencia
-      fechaFiltroInput.value = selectedDate;
+    });
+  }
+  const limpiarFiltroBtn = document.getElementById("limpiarFiltro");
+  if (limpiarFiltroBtn) {
+    limpiarFiltroBtn.addEventListener("click", () => {
+      if (fechaFiltroInput) {
+        fechaFiltroInput.value = "";
+        mostrarTurnosAdmin();
+      }
     });
   }
 
