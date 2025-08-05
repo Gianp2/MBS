@@ -30,61 +30,301 @@
     .nav-link.admin { background-color: #facc15; color: #1f2937; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; transition: background-color 0.3s ease, transform 0.3s ease; }
     .nav-link.admin:hover { background-color: #eab308; color: #1f2937; transform: scale(1.05); }
     .nav-link.admin::after { display: none; }
-    #mobile-menu { position: fixed; inset-block-start: 0; inset-inline-end: 0; block-size: 100vh; inline-size: 75%; max-inline-size: 300px; background-color: rgba(31, 41, 55, 0.95); transition: transform 0.3s ease-in-out; transform: translateX(100%); box-shadow: -4px 0 10px rgba(0, 0, 0, 0.3); z-index: 50; }
-    #mobile-menu.active { transform: translateX(0); }
-    #mobile-menu a { display: block; padding: 0.75rem 1rem; font-size: 1.1rem; font-weight: 500; text-align: center; color: #e5e7eb; transition: background-color 0.2s ease, color 0.2s ease; }
-    #mobile-menu a:hover { background-color: #4b5563; color: #facc15; }
-    #mobile-menu a.nav-link.admin { margin: 0.5rem 1rem; border-radius: 8px; }
-    .floating-reserve-button { position: fixed; inset-block-end: 20px; inset-inline-end: 20px; z-index: 100; background-color: #facc15; color: #1f2937; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); display: flex; align-items: center; gap: 8px; font-weight: 600; transition: transform 0.3s ease, background-color 0.3s ease; }
-    .floating-reserve-button:hover { background-color: #eab308; transform: scale(1.05); }
-    .floating-reserve-button img { inline-size: 24px; block-size: 24px; }
-    .form-turno input, .form-turno select { @apply w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm; }
-    .form-turno option:disabled { color: #6b7280; background-color: #374151; }
-    .form-turno label { @apply flex items-center gap-2; }
-    .form-turno i { color: #facc15; }
-    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(30deg) brightness(100%); }
-    @media (max-width: 640px) {
-      .form-turno { @apply max-w-xs p-6; }
-      input, select { @apply text-sm p-3; }
-      button[type="submit"] { @apply text-base py-2; }
+    #mobile-menu { 
+      position: fixed; 
+      inset-block-start: 0; 
+      inset-inline-end: 0; 
+      block-size: 100vh; 
+      inline-size: 75%; 
+      max-inline-size: 300px; 
+      background: linear-gradient(145deg, #1e293b, #2d3748); 
+      transition: transform 0.3s ease-in-out; 
+      transform: translateX(100%); 
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.3); 
+      z-index: 50; 
+      padding-top: 3rem; 
     }
-    #admin-modal { display: none; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.75); z-index: 1000; justify-content: center; align-items: center; }
-    #admin-modal.active { display: flex; }
-    #admin-modal .modal-content { background-color: #1f2937; padding: 1.5rem; border-radius: 12px; max-width: 900px; width: 95%; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
-    #admin-modal .action-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    #admin-modal .action-bar button { background-color: #facc15; color: #1f2937; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; font-family: 'Poppins', sans-serif; transition: background-color 0.3s ease, transform 0.2s ease; }
-    #admin-modal .action-bar button:hover { background-color: #eab308; transform: scale(1.05); }
-    #admin-modal table { width: 100%; border-collapse: separate; border-spacing: 0; color: #e5e7eb; font-family: 'Open Sans', sans-serif; }
-    #admin-modal th, #admin-modal td { padding: 0.75rem; text-align: left; font-size: 0.9rem; border-bottom: 1px solid #4b5563; }
-    #admin-modal th { font-family: 'Poppins', sans-serif; font-weight: 600; background-color: #374151; position: sticky; top: 0; z-index: 10; }
-    #admin-modal tbody tr:nth-child(even) { background-color: #2d3748; }
-    #admin-modal tbody tr:hover { background-color: #4b5563; transition: background-color 0.2s ease; }
-    #admin-modal .toggle-disponible { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; transition: background-color 0.3s ease, transform 0.2s ease; }
-    #admin-modal .toggle-disponible.disponible { background-color: #10b981; color: white; }
-    #admin-modal .toggle-disponible.no-disponible { background-color: #e3342f; color: white; }
-    #admin-modal .toggle-disponible:hover { transform: scale(1.05); }
-    #admin-modal .toggle-disponible.disponible:hover { background-color: #059669; }
-    #admin-modal .toggle-disponible.no-disponible:hover { background-color: #c53030; }
-    #admin-modal .edit-turno { background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-left: 0.5rem; transition: background-color 0.3s ease, transform 0.2s ease; }
-    #admin-modal .edit-turno:hover { background-color: #2563eb; transform: scale(1.05); }
-    #admin-modal .delete-turno { background-color: #dc2626; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-left: 0.5rem; transition: background-color 0.3s ease, transform 0.2s ease; }
-    #admin-modal .delete-turno:hover { background-color: #b91c1c; transform: scale(1.05); }
-    #admin-modal .editable-name { cursor: pointer; transition: background-color 0.3s ease; }
-    #admin-modal .editable-name:hover { background-color: #4b5563; }
-    #admin-modal .close-modal { background-color: #e3342f; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; font-family: 'Poppins', sans-serif; transition: background-color 0.3s ease, transform 0.2s ease; margin-top: 1rem; }
-    #admin-modal .close-modal:hover { background-color: #c53030; transform: scale(1.05); }
+    #mobile-menu.active { 
+      transform: translateX(0); 
+    }
+    #mobile-menu a { 
+      display: block; 
+      padding: 0.75rem 1rem; 
+      font-size: 1.1rem; 
+      font-weight: 500; 
+      text-align: center; 
+      color: #e5e7eb; 
+      transition: background-color 0.2s ease, color 0.2s ease; 
+    }
+    #mobile-menu a:hover { 
+      background-color: #4b5563; 
+      color: #facc15; 
+    }
+    #mobile-menu a.nav-link.admin { 
+      margin: 0.5rem 1rem; 
+      border-radius: 8px; 
+    }
+    .close-menu { 
+      position: absolute; 
+      top: 1rem; 
+      right: 1rem; 
+      background: none; 
+      border: none; 
+      color: #facc15; 
+      font-size: 1.5rem; 
+      cursor: pointer; 
+      transition: transform 0.3s ease, color 0.3s ease; 
+    }
+    .close-menu:hover { 
+      color: #eab308; 
+      transform: scale(1.2) rotate(90deg); 
+    }
+    .floating-reserve-button { 
+      position: fixed; 
+      inset-block-end: 20px; 
+      inset-inline-end: 20px; 
+      z-index: 100; 
+      background-color: #facc15; 
+      color: #1f2937; 
+      padding: 12px 20px; 
+      border-radius: 50px; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-weight: 600; 
+      transition: transform 0.3s ease, background-color 0.3s ease; 
+    }
+    .floating-reserve-button:hover { 
+      background-color: #eab308; 
+      transform: scale(1.05); 
+    }
+    .floating-reserve-button img { 
+      inline-size: 24px; 
+      block-size: 24px; 
+    }
+    .form-turno input, 
+    .form-turno select { 
+      @apply w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm; 
+    }
+    .form-turno option:disabled { 
+      color: #6b7280; 
+      background-color: #374151; 
+    }
+    .form-turno label { 
+      @apply flex items-center gap-2; 
+    }
+    .form-turno i { 
+      color: #facc15; 
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator { 
+      filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(30deg) brightness(100%); 
+    }
     @media (max-width: 640px) {
-      #admin-modal table { display: none; }
-      #admin-modal .turnos-mobile { display: block; }
-      #admin-modal .turno-card { background-color: #2d3748; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
-      #admin-modal .turno-card:nth-child(even) { background-color: #374151; }
-      #admin-modal .turno-card:hover { background-color: #4b5563; transition: background-color 0.2s ease; }
-      #admin-modal .turno-card p { margin: 0.5rem 0; font-size: 0.9rem; color: #e5e7eb; }
-      #admin-modal .turno-card .turno-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
-      #admin-modal .turno-card .turno-actions button { flex: 1; min-width: 100px; padding: 0.5rem; font-size: 0.85rem; }
+      .form-turno { 
+        @apply max-w-xs p-6; 
+      }
+      input, select { 
+        @apply text-sm p-3; 
+      }
+      button[type="submit"] { 
+        @apply text-base py-2; 
+      }
+    }
+    #admin-modal { 
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      background-color: rgba(0, 0, 0, 0.75); 
+      z-index: 1000; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    #admin-modal.active { 
+      display: flex; 
+    }
+    #admin-modal .modal-content { 
+      background-color: #1f2937; 
+      padding: 1.5rem; 
+      border-radius: 12px; 
+      max-width: 900px; 
+      width: 95%; 
+      max-height: 85vh; 
+      overflow-y: auto; 
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); 
+    }
+    #admin-modal .action-bar { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      gap: 1rem; 
+      margin-bottom: 1.5rem; 
+      flex-wrap: wrap; 
+    }
+    #admin-modal .action-bar button { 
+      background-color: #facc15; 
+      color: #1f2937; 
+      padding: 0.75rem 1.5rem; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      font-family: 'Poppins', sans-serif; 
+      transition: background-color 0.3s ease, transform 0.2s ease; 
+    }
+    #admin-modal .action-bar button:hover { 
+      background-color: #eab308; 
+      transform: scale(1.05); 
+    }
+    #admin-modal table { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0; 
+      color: #e5e7eb; 
+      font-family: 'Open Sans', sans-serif; 
+    }
+    #admin-modal th, 
+    #admin-modal td { 
+      padding: 0.75rem; 
+      text-align: left; 
+      font-size: 0.9rem; 
+      border-bottom: 1px solid #4b5563; 
+    }
+    #admin-modal th { 
+      font-family: 'Poppins', sans-serif; 
+      font-weight: 600; 
+      background-color: #374151; 
+      position: sticky; 
+      top: 0; 
+      z-index: 10; 
+    }
+    #admin-modal tbody tr:nth-child(even) { 
+      background-color: #2d3748; 
+    }
+    #admin-modal tbody tr:hover { 
+      background-color: #4b5563; 
+      transition: background-color 0.2s ease; 
+    }
+    #admin-modal .toggle-disponible { 
+      padding: 0.5rem 1rem; 
+      border-radius: 6px; 
+      font-size: 0.85rem; 
+      transition: background-color 0.3s ease, transform 0.2s ease; 
+    }
+    #admin-modal .toggle-disponible.disponible { 
+      background-color: #10b981; 
+      color: white; 
+    }
+    #admin-modal .toggle-disponible.no-disponible { 
+      background-color: #e3342f; 
+      color: white; 
+    }
+    #admin-modal .toggle-disponible:hover { 
+      transform: scale(1.05); 
+    }
+    #admin-modal .toggle-disponible.disponible:hover { 
+      background-color: #059669; 
+    }
+    #admin-modal .toggle-disponible.no-disponible:hover { 
+      background-color: #c53030; 
+    }
+    #admin-modal .edit-turno { 
+      background-color: #3b82f6; 
+      color: white; 
+      padding: 0.5rem 1rem; 
+      border-radius: 6px; 
+      font-size: 0.85rem; 
+      margin-left: 0.5rem; 
+      transition: background-color 0.3s ease, transform 0.2s ease; 
+    }
+    #admin-modal .edit-turno:hover { 
+      background-color: #2563eb; 
+      transform: scale(1.05); 
+    }
+    #admin-modal .delete-turno { 
+      background-color: #dc2626; 
+      color: white; 
+      padding: 0.5rem 1rem; 
+      border-radius: 6px; 
+      font-size: 0.85rem; 
+      margin-left: 0.5rem; 
+      transition: background-color 0.3s ease, transform 0.2s ease; 
+    }
+    #admin-modal .delete-turno:hover { 
+      background-color: #b91c1c; 
+      transform: scale(1.05); 
+    }
+    #admin-modal .editable-name { 
+      cursor: pointer; 
+      transition: background-color 0.3s ease; 
+    }
+    #admin-modal .editable-name:hover { 
+      background-color: #4b5563; 
+    }
+    #admin-modal .close-modal { 
+      background-color: #e3342f; 
+      color: white; 
+      padding: 0.75rem 1.5rem; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      font-family: 'Poppins', sans-serif; 
+      transition: background-color 0.3s ease, transform 0.2s ease; 
+      margin-top: 1rem; 
+    }
+    #admin-modal .close-modal:hover { 
+      background-color: #c53030; 
+      transform: scale(1.05); 
+    }
+    @media (max-width: 640px) {
+      .form-turno { 
+        @apply max-w-xs p-6; 
+      }
+      input, select { 
+        @apply text-sm p-3; 
+      }
+      button[type="submit"] { 
+        @apply text-base py-2; 
+      }
+      #admin-modal table { 
+        display: none; 
+      }
+      #admin-modal .turnos-mobile { 
+        display: block; 
+      }
+      #admin-modal .turno-card { 
+        background-color: #2d3748; 
+        border-radius: 8px; 
+        padding: 1rem; 
+        margin-bottom: 1rem; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+      }
+      #admin-modal .turno-card:nth-child(even) { 
+        background-color: #374151; 
+      }
+      #admin-modal .turno-card:hover { 
+        background-color: #4b5563; 
+        transition: background-color 0.2s ease; 
+      }
+      #admin-modal .turno-card p { 
+        margin: 0.5rem 0; 
+        font-size: 0.9rem; 
+        color: #e5e7eb; 
+      }
+      #admin-modal .turno-card .turno-actions { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 0.5rem; 
+        margin-top: 0.75rem; 
+      }
+      #admin-modal .turno-card .turno-actions button { 
+        flex: 1; 
+        min-width: 100px; 
+        padding: 0.5rem; 
+        font-size: 0.85rem; 
+      }
     }
     @media (min-width: 641px) {
-      #admin-modal .turnos-mobile { display: none; }
+      #admin-modal .turnos-mobile { 
+        display: none; 
+      }
     }
   </style>
 </head>
@@ -104,7 +344,10 @@
         <i class="fas fa-bars text-2xl"></i>
       </button>
     </div>
-    <nav class="hidden md:hidden flex-col" id="mobile-menu" aria-label="Menú móvil">
+    <nav class="md:hidden flex-col" id="mobile-menu" aria-label="Menú móvil">
+      <button class="close-menu" aria-label="Cerrar menú móvil">
+        <i class="fas fa-times"></i>
+      </button>
       <a href="javascript:void(0)" id="admin-link-mobile" class="nav-link admin font-['Poppins']"><i class="fas fa-user-shield mr-2"></i>Admin</a>
     </nav>
   </header>
@@ -116,7 +359,7 @@
           <form id="reserva-form" onsubmit="reservarTurno(event)">
             <div class="mb-6">
               <label for="nombre" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-user"></i> Nombre:</label>
-              <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Tu nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+              <input type="text" id="nombre" name="nombre" required aria-required="true" placeholder="Nombre completo" class="w-full p-4 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
             </div>
             <div class="mb-6">
               <label for="telefono" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-phone"></i> Teléfono:</label>
@@ -188,6 +431,23 @@
       </div>
     </div>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileMenu = document.querySelector('#mobile-menu');
+      const closeMenu = document.querySelector('.close-menu');
+
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('active');
+      });
+
+      closeMenu.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('active');
+      });
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
