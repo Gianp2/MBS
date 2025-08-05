@@ -37,6 +37,7 @@
     #mobile-menu a.nav-link.admin { margin: 0.5rem 1rem; border-radius: 8px; }
     .floating-reserve-button { position: fixed; inset-block-end: 20px; inset-inline-end: 20px; z-index: 100; background-color: #facc15; color: #1f2937; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); display: flex; align-items: center; gap: 8px; font-weight: 600; transition: transform 0.3s ease, background-color 0.3s ease; }
     .floating-reserve-button:hover { background-color: #eab308; transform: scale(1.05); }
+    .floating-reserve-button img { inline-size: 24px; block-size: 24px; }
     .form-turno input, .form-turno select { @apply w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm; }
     .form-turno option:disabled { color: #6b7280; background-color: #374151; }
     .form-turno label { @apply flex items-center gap-2; }
@@ -84,38 +85,6 @@
     }
     @media (min-width: 641px) {
       #admin-modal .turnos-mobile { display: none; }
-    }
-    /* Loader Styles */
-    .loader-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 9999;
-    }
-    .loader {
-      width: 150px;
-      height: 150px;
-      animation: spinAndPulse 1.5s ease-in-out infinite;
-    }
-    @keyframes spinAndPulse {
-      0% {
-        transform: rotate(0deg) scale(1);
-        opacity: 0.5;
-      }
-      50% {
-        transform: rotate(180deg) scale(1.1);
-        opacity: 1;
-      }
-      100% {
-        transform: rotate(360deg) scale(1);
-        opacity: 0.5;
-      }
     }
   </style>
 </head>
@@ -219,9 +188,6 @@
       </div>
     </div>
   </footer>
-  <div class="loader-container">
-    <img src="img/logomonkey.png" alt="Loader" class="loader">
-  </div>
   <script src="script.js"></script>
 </body>
 </html>
