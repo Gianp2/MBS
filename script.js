@@ -1112,10 +1112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     filterDiv.className = "mb-4";
     filterDiv.innerHTML = `
       <label for="fechaFiltro" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-check mr-2 text-yellow-400"></i>Filtrar Turnos por Fecha:</label>
-      <div class="flex gap-2">
-        <input type="date" id="fechaFiltro" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-        <button id="limpiarFiltro" class="px-4 py-2 rounded-lg bg-gray-600 text-white font-['Poppins'] font-semibold hover:bg-gray-700 transition-all duration-300">Limpiar Filtro</button>
-      </div>
+      <input type="date" id="fechaFiltro" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
     `;
     const modalContent = document.querySelector("#admin-modal .modal-content");
     const actionBar = document.querySelector("#admin-modal .action-bar");
@@ -1139,15 +1136,6 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaFiltroInput.addEventListener("change", (e) => {
       const selectedDate = e.target.value;
       mostrarTurnosAdmin(selectedDate);
-    });
-  }
-  const limpiarFiltroBtn = document.getElementById("limpiarFiltro");
-  if (limpiarFiltroBtn) {
-    limpiarFiltroBtn.addEventListener("click", () => {
-      if (fechaFiltroInput) {
-        fechaFiltroInput.value = "";
-        mostrarTurnosAdmin();
-      }
     });
   }
 
