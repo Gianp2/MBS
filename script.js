@@ -1054,8 +1054,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const horaSelect = document.getElementById("hora");
   const today = new Date();
   const minDate = new Date(today);
-  minDate.setDate(today.getDate() + 1);
-
   if (fechaInput) {
     fechaInput.min = formatDateToISO(minDate);
 
