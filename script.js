@@ -764,6 +764,7 @@ function mostrarTurnosAdmin(selectedDate = "") {
     lista.innerHTML = "";
     listaMobile.innerHTML = "";
 
+    // Filtrar turnos por fecha seleccionada
     let filteredTurnos = turnos;
     if (selectedDate) {
       const formattedSelectedDate = formatDate(selectedDate);
@@ -774,8 +775,8 @@ function mostrarTurnosAdmin(selectedDate = "") {
       const message = selectedDate
         ? `No se encontraron turnos para ${formatDate(selectedDate)}.`
         : "No se encontraron turnos. Genera turnos para comenzar.";
-      lista.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-200">${message}</td></tr>`;
-      listaMobile.innerHTML = `<p class="text-center text-gray-200 py-4">${message}</p>`;
+      lista.innerHTML = `<tr><td colspan="5" class="text-center">${message}</td></tr>`;
+      listaMobile.innerHTML = `<p class="text-center text-gray-200">${message}</p>`;
       document.getElementById("admin-modal").classList.add("active");
       return;
     }
@@ -793,49 +794,46 @@ function mostrarTurnosAdmin(selectedDate = "") {
       const disponible = t.Disponible || "Desconocido";
       const nombre = t.nombre || "";
       const telefono = t.telefono || "";
-      const estado = disponible === "Sí" ? '<span class="text-green-500">Disponible</span>' : nombre ? '<span class="text-yellow-400">Reservado</span>' : '<span class="text-red-600">No Disponible</span>';
+      const estado = disponible === "Sí" ? '<span style="color: #10b981;">Disponible</span>' : nombre ? '<span style="color: #facc15;">Reservado</span>' : '<span style="color: #e3342f;">No Disponible</span>';
 
       // Fila para la tabla (escritorio)
       const row = document.createElement("tr");
-      row.className = "border-b border-gray-700";
       row.innerHTML = `
-        <td class="py-3 px-4 text-center">${fecha}</td>
-        <td class="py-3 px-4 text-center">${hora}</td>
-        <td class="py-3 px-4 text-center">${estado}</td>
-        <td class="py-3 px-4 text-center cursor-pointer hover:text-yellow-400 transition-colors" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</td>
-        <td class="py-3 px-4">
-          <div class="flex justify-center gap-2">
-            <button class="toggle-disponible ${disponible === 'Sí' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-600 hover:bg-red-700'} text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleToggleDisponible('${id}', '${disponible}')">
-              ${disponible === "Sí" ? "Marcar No Disponible" : "Marcar Disponible"}
-            </button>
-            <button class="edit-turno bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
-              Editar
-            </button>
-            <button class="delete-turno bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleDeleteTurno('${id}')">
-              Eliminar
-            </button>
-          </div>
+        <td>${fecha}</td>
+        <td>${hora}</td>
+        <td>${estado}</td>
+        <td class="editable-name" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</td>
+        <td>
+          <button class="toggle-disponible ${disponible === 'Sí' ? 'disponible' : 'no-disponible'}" onclick="handleToggleDisponible('${id}', '${disponible}')">
+            ${disponible === "Sí" ? "Marcar No Disponible" : "Marcar Disponible"}
+          </button>
+          <button class="edit-turno" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
+            Editar
+          </button>
+          <button class="delete-turno" onclick="handleDeleteTurno('${id}')">
+            Eliminar
+          </button>
         </td>
       `;
       lista.appendChild(row);
 
       // Tarjeta para móviles
       const card = document.createElement("div");
-      card.className = "turno-card bg-gray-700 rounded-lg p-4 mb-4 shadow-md";
+      card.className = "turno-card";
       card.innerHTML = `
-        <p class="text-sm"><strong>Fecha:</strong> ${fecha}</p>
-        <p class="text-sm"><strong>Hora:</strong> ${hora}</p>
-        <p class="text-sm"><strong>Estado:</strong> ${estado}</p>
-        <p class="text-sm"><strong>Cliente:</strong> <span class="cursor-pointer hover:text-yellow-400 transition-colors" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</span></p>
-        <p class="text-sm"><strong>Teléfono:</strong> ${telefono || "—"}</p>
-        <div class="turno-actions flex flex-col gap-2 mt-3 items-center">
-          <button class="toggle-disponible ${disponible === 'Sí' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-600 hover:bg-red-700'} text-white w-full text-center px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleToggleDisponible('${id}', '${disponible}')">
-            ${disponible === "Sí" ? "Marcar No Disponible" : "Marcar Disponible"}
+        <p><strong>Fecha:</strong> ${fecha}</p>
+        <p><strong>Hora:</strong> ${hora}</p>
+        <p><strong>Estado:</strong> ${estado}</p>
+        <p><strong>Cliente:</strong> <span class="editable-name" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</span></p>
+        <p><strong>Teléfono:</strong> ${telefono || "—"}</p>
+        <div class="turno-actions">
+          <button class="toggle-disponible ${disponible === 'Sí' ? 'disponible' : 'no-disponible'}" onclick="handleToggleDisponible('${id}', '${disponible}')">
+            ${disponible === "Sí" ? "No Disponible" : "Disponible"}
           </button>
-          <button class="edit-turno bg-yellow-400 hover:bg-yellow-500 text-gray-900 w-full text-center px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
+          <button class="edit-turno" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
             Editar
           </button>
-          <button class="delete-turno bg-red-600 hover:bg-red-700 text-white w-full text-center px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleDeleteTurno('${id}')">
+          <button class="delete-turno" onclick="handleDeleteTurno('${id}')">
             Eliminar
           </button>
         </div>
@@ -1007,6 +1005,8 @@ async function reservarTurno(event) {
       text: error.message || "No se pudo reservar el turno. Inténtalo de nuevo.",
       confirmButtonColor: "#facc15"
     });
+    // Refrescar la lista de horarios disponibles
+    await updateTimeSlots();
   }
 }
 
