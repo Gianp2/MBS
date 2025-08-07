@@ -1005,8 +1005,6 @@ async function reservarTurno(event) {
       text: error.message || "No se pudo reservar el turno. Inténtalo de nuevo.",
       confirmButtonColor: "#facc15"
     });
-    // Refrescar la lista de horarios disponibles
-    await updateTimeSlots();
   }
 }
 
