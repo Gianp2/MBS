@@ -1,4 +1,3 @@
-// Inicializar Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyD0dfRMXPv35Qpe54P3xezjt4OAACM9Flc",
   authDomain: "peluqueriambs.firebaseapp.com",
