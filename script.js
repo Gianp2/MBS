@@ -1,4 +1,3 @@
-// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyD0dfRMXPv35Qpe54P3xezjt4OAACM9Flc",
   authDomain: "peluqueriambs.firebaseapp.com",
@@ -11,13 +10,13 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// Definición de horarios y días hábiles
+// Horarios
 const horariosManana = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30"];
 const horariosTarde = ["15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"];
 const horarios = [...horariosManana, ...horariosTarde];
 const diasHabilitados = [2, 3, 4, 5, 6]; // Martes a sábado
 
-// Utilidad para parsear fecha desde DD/MM/YYYY o YYYY-MM-DD a objeto Date
+// Parsear fecha desde DD/MM/YYYY o YYYY-MM-DD a Date
 function parseDMY(dateStr) {
   if (!dateStr) return null;
   if (dateStr.includes("/")) {
@@ -69,18 +68,13 @@ async function obtenerTurnos() {
       icon: "error",
       title: "Error",
       text: "No se pudieron cargar los turnos. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return [];
   }
 }
 
-// Escuchar cambios en turnos en tiempo real
+// Escuchar turnos en tiempo real
 function escucharTurnos(callback) {
   db.collection("turnos").onSnapshot((snapshot) => {
     console.log("Snapshot recibido, documentos:", snapshot.size);
@@ -95,12 +89,7 @@ function escucharTurnos(callback) {
       icon: "error",
       title: "Error",
       text: "No se pudieron cargar los turnos en tiempo real. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   });
 }
@@ -116,12 +105,7 @@ async function guardarTurno(turno) {
       icon: "error",
       title: "Error",
       text: "No se pudo guardar el turno. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -134,12 +118,7 @@ async function generarTurnos() {
       icon: "warning",
       title: "Falta fecha",
       text: "Por favor, selecciona una fecha para generar los turnos.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -150,12 +129,7 @@ async function generarTurnos() {
       icon: "warning",
       title: "Fecha inválida",
       text: "Por favor, selecciona una fecha válida.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -165,12 +139,7 @@ async function generarTurnos() {
       icon: "warning",
       title: "Día no laborable",
       text: "Por favor, selecciona un día laborable (martes a sábado).",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -199,12 +168,7 @@ async function generarTurnos() {
       icon: "info",
       title: "Sin turnos nuevos",
       text: `Todos los turnos para ${formattedDate} ya están generados.`,
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -218,11 +182,7 @@ async function generarTurnos() {
     title: "Turnos generados",
     text: `Se generaron ${nuevosTurnos.length} turnos para ${formattedDate} correctamente.`,
     timer: 2000,
-    showConfirmButton: false,
-    customClass: {
-      popup: "rounded-xl shadow-2xl",
-      title: "text-xl font-bold font-['Poppins'] text-gray-200"
-    }
+    showConfirmButton: false
   });
   document.getElementById("fechaGenerar").value = "";
 }
@@ -235,12 +195,7 @@ async function deleteTurno(id) {
       icon: "error",
       title: "Error",
       text: "ID de turno inválido. No se pudo eliminar el turno.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -254,12 +209,7 @@ async function deleteTurno(id) {
         icon: "error",
         title: "Error",
         text: "El turno no existe. No se pudo eliminar.",
-        confirmButtonColor: "#facc15",
-        customClass: {
-          popup: "rounded-xl shadow-2xl",
-          title: "text-xl font-bold font-['Poppins'] text-gray-200",
-          confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-        }
+        confirmButtonColor: "#facc15"
       });
       return;
     }
@@ -270,11 +220,7 @@ async function deleteTurno(id) {
       title: "Turno eliminado",
       text: "El turno ha sido eliminado correctamente.",
       timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200"
-      }
+      showConfirmButton: false
     });
     mostrarTurnosAdmin();
   } catch (error) {
@@ -283,12 +229,7 @@ async function deleteTurno(id) {
       icon: "error",
       title: "Error",
       text: `No se pudo eliminar el turno: ${error.message || "Error desconocido"}`,
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -301,12 +242,7 @@ async function updateTurno(id, disponible, nombre = "", telefono = "") {
       icon: "error",
       title: "Error",
       text: "ID de turno inválido. No se pudo actualizar.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -329,11 +265,7 @@ async function updateTurno(id, disponible, nombre = "", telefono = "") {
       title: "Turno actualizado",
       text: "El turno ha sido actualizado correctamente.",
       timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200"
-      }
+      showConfirmButton: false
     });
     mostrarTurnosAdmin();
   } catch (error) {
@@ -342,12 +274,7 @@ async function updateTurno(id, disponible, nombre = "", telefono = "") {
       icon: "error",
       title: "Error",
       text: `No se pudo actualizar el turno: ${error.message || "Error desconocido"}`,
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -383,12 +310,7 @@ async function login(email, password) {
       icon: "error",
       title: "Error de autenticación",
       text: errorMessage,
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -404,11 +326,7 @@ async function logout() {
       title: "Sesión cerrada",
       text: "Has cerrado sesión correctamente.",
       timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200"
-      }
+      showConfirmButton: false
     });
   } catch (error) {
     console.error("Error al cerrar sesión: ", error);
@@ -416,12 +334,7 @@ async function logout() {
       icon: "error",
       title: "Error",
       text: "No se pudo cerrar la sesión. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -508,17 +421,12 @@ function mostrarPromptClave() {
       icon: "error",
       title: "Error",
       text: "No se pudo mostrar el formulario de login. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   });
 }
 
-// Manejar toggle de disponibilidad
+// Manejar toggle disponible
 async function handleToggleDisponible(id, currentDisponible) {
   if (!id) {
     console.error("ID de turno inválido en handleToggleDisponible:", id);
@@ -526,17 +434,13 @@ async function handleToggleDisponible(id, currentDisponible) {
       icon: "error",
       title: "Error",
       text: "ID de turno inválido. No se pudo actualizar.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
   const nuevoEstado = currentDisponible === "Sí" ? "No" : "Sí";
   if (nuevoEstado === "No") {
+    // Si marcamos como no disponible, pedimos nombre y teléfono
     Swal.fire({
       title: "Marcar como No Disponible",
       html: `
@@ -559,12 +463,6 @@ async function handleToggleDisponible(id, currentDisponible) {
       width: "32rem",
       background: "#1f2937",
       color: "#e5e7eb",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105",
-        cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
-      },
       preConfirm: () => {
         const nombre = document.getElementById("toggleNombre").value;
         const telefono = document.getElementById("toggleTelefono").value;
@@ -581,6 +479,7 @@ async function handleToggleDisponible(id, currentDisponible) {
       }
     });
   } else {
+    // Si marcamos como disponible, no se necesitan nombre ni teléfono
     await updateTurno(id, nuevoEstado);
   }
 }
@@ -598,12 +497,6 @@ async function handleEditName(id, currentName, currentDisponible) {
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#facc15",
     cancelButtonColor: "#e3342f",
-    customClass: {
-      popup: "rounded-xl shadow-2xl",
-      title: "text-xl font-bold font-['Poppins'] text-gray-200",
-      confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105",
-      cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
-    },
     inputValidator: (value) => {
       if (!value) {
         return "Debes ingresar un nombre";
@@ -650,12 +543,6 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
     width: "32rem",
     background: "#1f2937",
     color: "#e5e7eb",
-    customClass: {
-      popup: "rounded-xl shadow-2xl",
-      title: "text-xl font-bold font-['Poppins'] text-gray-200",
-      confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105",
-      cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
-    },
     preConfirm: async () => {
       const fecha = document.getElementById("editFecha").value;
       const hora = document.getElementById("editHora").value;
@@ -699,6 +586,7 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
             throw new Error("El turno no existe");
           }
 
+          // Si la fecha u hora cambió, crear un nuevo turno disponible en la fecha/hora original
           if (fecha !== originalFecha || hora !== originalHora) {
             const originalTurnoExists = (await db.collection("turnos")
               .where("fecha", "==", originalFecha)
@@ -717,6 +605,7 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
             }
           }
 
+          // Actualizar el turno existente con los nuevos datos
           transaction.update(turnoRef, {
             fecha: fecha,
             hora: hora,
@@ -732,11 +621,7 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
           title: "Turno actualizado",
           text: "El turno ha sido actualizado correctamente.",
           timer: 1500,
-          showConfirmButton: false,
-          customClass: {
-            popup: "rounded-xl shadow-2xl",
-            title: "text-xl font-bold font-['Poppins'] text-gray-200"
-          }
+          showConfirmButton: false
         });
         mostrarTurnosAdmin();
       } catch (error) {
@@ -745,12 +630,7 @@ async function handleEditTurno(id, currentFecha, currentHora, currentNombre, cur
           icon: "error",
           title: "Error",
           text: `No se pudo actualizar el turno: ${error.message || "Error desconocido"}`,
-          confirmButtonColor: "#facc15",
-          customClass: {
-            popup: "rounded-xl shadow-2xl",
-            title: "text-xl font-bold font-['Poppins'] text-gray-200",
-            confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-          }
+          confirmButtonColor: "#facc15"
         });
       }
     }
@@ -765,12 +645,7 @@ async function handleDeleteTurno(id) {
       icon: "error",
       title: "Error",
       text: "ID de turno inválido. No se pudo eliminar.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -782,13 +657,7 @@ async function handleDeleteTurno(id) {
     confirmButtonText: "Eliminar",
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#dc2626",
-    cancelButtonColor: "#e3342f",
-    customClass: {
-      popup: "rounded-xl shadow-2xl",
-      title: "text-xl font-bold font-['Poppins'] text-gray-200",
-      confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105",
-      cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-gray-600 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
-    }
+    cancelButtonColor: "#e3342f"
   }).then(async (result) => {
     if (result.isConfirmed) {
       await deleteTurno(id);
@@ -813,11 +682,7 @@ async function exportTurnos() {
       title: "Turnos exportados",
       text: "Los turnos se han exportado correctamente como archivo JSON.",
       timer: 1500,
-      showConfirmButton: false,
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200"
-      }
+      showConfirmButton: false
     });
   } catch (error) {
     console.error("Error al exportar turnos: ", error);
@@ -825,12 +690,7 @@ async function exportTurnos() {
       icon: "error",
       title: "Error",
       text: "No se pudieron exportar los turnos. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -849,13 +709,7 @@ async function importTurnos() {
     confirmButtonText: "Importar",
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#facc15",
-    cancelButtonColor: "#e3342f",
-    customClass: {
-      popup: "rounded-xl shadow-2xl",
-      title: "text-xl font-bold font-['Poppins'] text-gray-200",
-      confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105",
-      cancelButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-white bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
-    }
+    cancelButtonColor: "#e3342f"
   }).then(async (result) => {
     if (result.isConfirmed && result.value) {
       const file = result.value;
@@ -885,11 +739,7 @@ async function importTurnos() {
             title: "Turnos importados",
             text: "Los turnos se han importado correctamente.",
             timer: 1500,
-            showConfirmButton: false,
-            customClass: {
-              popup: "rounded-xl shadow-2xl",
-              title: "text-xl font-bold font-['Poppins'] text-gray-200"
-            }
+            showConfirmButton: false
           });
         } catch (err) {
           console.error("Error al importar turnos: ", err);
@@ -897,12 +747,7 @@ async function importTurnos() {
             icon: "error",
             title: "Error",
             text: `No se pudieron importar los turnos: ${err.message}`,
-            confirmButtonColor: "#facc15",
-            customClass: {
-              popup: "rounded-xl shadow-2xl",
-              title: "text-xl font-bold font-['Poppins'] text-gray-200",
-              confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-            }
+            confirmButtonColor: "#facc15"
           });
         }
       };
@@ -919,6 +764,7 @@ function mostrarTurnosAdmin(selectedDate = "") {
     lista.innerHTML = "";
     listaMobile.innerHTML = "";
 
+    // Filtrar turnos por fecha seleccionada
     let filteredTurnos = turnos;
     if (selectedDate) {
       const formattedSelectedDate = formatDate(selectedDate);
@@ -929,8 +775,8 @@ function mostrarTurnosAdmin(selectedDate = "") {
       const message = selectedDate
         ? `No se encontraron turnos para ${formatDate(selectedDate)}.`
         : "No se encontraron turnos. Genera turnos para comenzar.";
-      lista.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-200">${message}</td></tr>`;
-      listaMobile.innerHTML = `<p class="text-center text-gray-200 py-4">${message}</p>`;
+      lista.innerHTML = `<tr><td colspan="5" class="text-center">${message}</td></tr>`;
+      listaMobile.innerHTML = `<p class="text-center text-gray-200">${message}</p>`;
       document.getElementById("admin-modal").classList.add("active");
       return;
     }
@@ -948,49 +794,46 @@ function mostrarTurnosAdmin(selectedDate = "") {
       const disponible = t.Disponible || "Desconocido";
       const nombre = t.nombre || "";
       const telefono = t.telefono || "";
-      const estado = disponible === "Sí" ? '<span class="text-green-500">Disponible</span>' : nombre ? '<span class="text-yellow-400">Reservado</span>' : '<span class="text-red-600">No Disponible</span>';
+      const estado = disponible === "Sí" ? '<span style="color: #10b981;">Disponible</span>' : nombre ? '<span style="color: #facc15;">Reservado</span>' : '<span style="color: #e3342f;">No Disponible</span>';
 
       // Fila para la tabla (escritorio)
       const row = document.createElement("tr");
-      row.className = "border-b border-gray-700";
       row.innerHTML = `
-        <td class="py-3 px-4 text-center">${fecha}</td>
-        <td class="py-3 px-4 text-center">${hora}</td>
-        <td class="py-3 px-4 text-center">${estado}</td>
-        <td class="py-3 px-4 text-center cursor-pointer hover:text-yellow-400 transition-colors" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</td>
-        <td class="py-3 px-4">
-          <div class="flex justify-center gap-2">
-            <button class="toggle-disponible ${disponible === 'Sí' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-600 hover:bg-red-700'} text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleToggleDisponible('${id}', '${disponible}')">
-              ${disponible === "Sí" ? "Marcar No Disponible" : "Marcar Disponible"}
-            </button>
-            <button class="edit-turno bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
-              Editar
-            </button>
-            <button class="delete-turno bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleDeleteTurno('${id}')">
-              Eliminar
-            </button>
-          </div>
+        <td>${fecha}</td>
+        <td>${hora}</td>
+        <td>${estado}</td>
+        <td class="editable-name" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</td>
+        <td>
+          <button class="toggle-disponible ${disponible === 'Sí' ? 'disponible' : 'no-disponible'}" onclick="handleToggleDisponible('${id}', '${disponible}')">
+            ${disponible === "Sí" ? "Marcar No Disponible" : "Marcar Disponible"}
+          </button>
+          <button class="edit-turno" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
+            Editar
+          </button>
+          <button class="delete-turno" onclick="handleDeleteTurno('${id}')">
+            Eliminar
+          </button>
         </td>
       `;
       lista.appendChild(row);
 
       // Tarjeta para móviles
       const card = document.createElement("div");
-      card.className = "turno-card bg-gray-700 rounded-lg p-4 mb-4 shadow-md";
+      card.className = "turno-card";
       card.innerHTML = `
-        <p class="text-sm"><strong>Fecha:</strong> ${fecha}</p>
-        <p class="text-sm"><strong>Hora:</strong> ${hora}</p>
-        <p class="text-sm"><strong>Estado:</strong> ${estado}</p>
-        <p class="text-sm"><strong>Cliente:</strong> <span class="cursor-pointer hover:text-yellow-400 transition-colors" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</span></p>
-        <p class="text-sm"><strong>Teléfono:</strong> ${telefono || "—"}</p>
-        <div class="turno-actions flex flex-col gap-2 mt-3">
-          <button class="toggle-disponible ${disponible === 'Sí' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-600 hover:bg-red-700'} text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleToggleDisponible('${id}', '${disponible}')">
+        <p><strong>Fecha:</strong> ${fecha}</p>
+        <p><strong>Hora:</strong> ${hora}</p>
+        <p><strong>Estado:</strong> ${estado}</p>
+        <p><strong>Cliente:</strong> <span class="editable-name" onclick="handleEditName('${id}', '${nombre}', '${disponible}')">${nombre || "—"}</span></p>
+        <p><strong>Teléfono:</strong> ${telefono || "—"}</p>
+        <div class="turno-actions">
+          <button class="toggle-disponible ${disponible === 'Sí' ? 'disponible' : 'no-disponible'}" onclick="handleToggleDisponible('${id}', '${disponible}')">
             ${disponible === "Sí" ? "No Disponible" : "Disponible"}
           </button>
-          <button class="edit-turno bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
+          <button class="edit-turno" onclick="handleEditTurno('${id}', '${fecha}', '${hora}', '${nombre}', '${telefono}', '${disponible}')">
             Editar
           </button>
-          <button class="delete-turno bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105" onclick="handleDeleteTurno('${id}')">
+          <button class="delete-turno" onclick="handleDeleteTurno('${id}')">
             Eliminar
           </button>
         </div>
@@ -1020,12 +863,7 @@ async function updateTimeSlots() {
       icon: "warning",
       title: "Fecha inválida",
       text: "Por favor, selecciona una fecha válida.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     fechaInput.value = "";
     horaSelect.disabled = true;
@@ -1037,12 +875,7 @@ async function updateTimeSlots() {
       icon: "warning",
       title: "Día no laborable",
       text: "Solo se pueden reservar turnos de martes a sábado.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     fechaInput.value = "";
     horaSelect.disabled = true;
@@ -1080,12 +913,7 @@ async function updateTimeSlots() {
       icon: "error",
       title: "Error",
       text: "No se pudieron cargar los horarios. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
   }
 }
@@ -1103,12 +931,7 @@ async function reservarTurno(event) {
       icon: "warning",
       title: "Faltan datos",
       text: "Por favor, completa todos los campos.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -1119,12 +942,7 @@ async function reservarTurno(event) {
       icon: "warning",
       title: "Fecha inválida",
       text: "Por favor, selecciona una fecha válida.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
     return;
   }
@@ -1145,6 +963,7 @@ async function reservarTurno(event) {
       const turnoDoc = querySnapshot.docs[0];
       const turnoId = turnoDoc.id;
 
+      // Verificar nuevamente que el turno esté disponible
       const turnoRef = db.collection("turnos").doc(turnoId);
       const turnoSnap = await transaction.get(turnoRef);
       if (!turnoSnap.exists) {
@@ -1154,6 +973,7 @@ async function reservarTurno(event) {
         throw new Error("El turno ya fue reservado.");
       }
 
+      // Actualizar el turno
       transaction.update(turnoRef, {
         nombre: nombre,
         telefono: telefono,
@@ -1168,12 +988,9 @@ async function reservarTurno(event) {
       title: "Turno reservado",
       text: "Tu turno ha sido reservado con éxito. Ahora puedes confirmar por WhatsApp.",
       timer: 2000,
-      showConfirmButton: false,
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200"
-      }
+      showConfirmButton: false
     });
+    // Enviar mensaje de WhatsApp
     enviarMensajeWhatsapp(nombre, formattedDate, hora);
     document.getElementById("reserva-form").reset();
     document.getElementById("fecha").value = "";
@@ -1186,51 +1003,50 @@ async function reservarTurno(event) {
       icon: "error",
       title: "Error",
       text: error.message || "No se pudo reservar el turno. Inténtalo de nuevo.",
-      confirmButtonColor: "#facc15",
-      customClass: {
-        popup: "rounded-xl shadow-2xl",
-        title: "text-xl font-bold font-['Poppins'] text-gray-200",
-        confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-      }
+      confirmButtonColor: "#facc15"
     });
+    // Refrescar la lista de horarios disponibles
     await updateTimeSlots();
   }
 }
 
 // Enviar mensaje de WhatsApp
 function enviarMensajeWhatsapp(nombre, fecha, hora) {
-  const telefono = "5493471511010";
+  const telefono = "5493471511010"; // Número de destino (código de país + número)
   const mensaje = `Hola, soy ${nombre}. Quiero confirmar mi turno para el ${fecha} a las ${hora}.`;
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-  window.open(url, "_blank");
+  window.open(url, "_blank"); // Abre WhatsApp Web o app móvil
   console.log("Abriendo WhatsApp con mensaje:", mensaje);
 }
 
-// Inicializar eventos y restricciones
+// Inicializar eventos y restricciones de fecha
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM completamente cargado");
 
+  // Verificar elementos del DOM
   const adminLink = document.getElementById("admin-link");
   const adminLinkMobile = document.getElementById("admin-link-mobile");
   
-  if (adminLink) {
+  if (!adminLink) {
+    console.error("Elemento con ID 'admin-link' no encontrado");
+  } else {
+    console.log("Elemento 'admin-link' encontrado, vinculando evento...");
     adminLink.addEventListener("click", (e) => {
       e.preventDefault();
       console.log("Botón Admin clicado (escritorio)");
       mostrarPromptClave();
     });
-  } else {
-    console.error("Elemento con ID 'admin-link' no encontrado");
   }
 
-  if (adminLinkMobile) {
+  if (!adminLinkMobile) {
+    console.error("Elemento con ID 'admin-link-mobile' no encontrado");
+  } else {
+    console.log("Elemento 'admin-link-mobile' encontrado, vinculando evento...");
     adminLinkMobile.addEventListener("click", (e) => {
       e.preventDefault();
       console.log("Botón Admin móvil clicado");
       mostrarPromptClave();
     });
-  } else {
-    console.error("Elemento con ID 'admin-link-mobile' no encontrado");
   }
 
   const fechaInput = document.getElementById("fecha");
@@ -1247,12 +1063,7 @@ document.addEventListener("DOMContentLoaded", () => {
           icon: "warning",
           title: "Fecha inválida",
           text: "Por favor, selecciona una fecha válida.",
-          confirmButtonColor: "#facc15",
-          customClass: {
-            popup: "rounded-xl shadow-2xl",
-            title: "text-xl font-bold font-['Poppins'] text-gray-200",
-            confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-          }
+          confirmButtonColor: "#facc15"
         });
         e.target.value = "";
         horaSelect.disabled = true;
@@ -1266,12 +1077,7 @@ document.addEventListener("DOMContentLoaded", () => {
           icon: "warning",
           title: "Día no laborable",
           text: "Solo se pueden reservar turnos de martes a sábado.",
-          confirmButtonColor: "#facc15",
-          customClass: {
-            popup: "rounded-xl shadow-2xl",
-            title: "text-xl font-bold font-['Poppins'] text-gray-200",
-            confirmButton: "px-6 py-3 rounded-lg font-['Poppins'] font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105"
-          }
+          confirmButtonColor: "#facc15"
         });
         e.target.value = "";
         horaSelect.disabled = true;
@@ -1287,6 +1093,7 @@ document.addEventListener("DOMContentLoaded", () => {
     horaSelect.disabled = true;
   }
 
+  // Vincular botones de administración
   const generarTurnosBtn = document.getElementById("generarTurnos");
   const refreshTurnosBtn = document.getElementById("refreshTurnos");
   const exportTurnosBtn = document.getElementById("exportTurnos");
@@ -1295,14 +1102,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModalBtn = document.querySelector("#admin-modal .close-modal");
   const fechaGenerarInput = document.getElementById("fechaGenerar");
 
+  // Añadir campo fechaFiltro dinámicamente si no existe
   let fechaFiltroInput = document.getElementById("fechaFiltro");
   if (!fechaFiltroInput) {
     const filterDiv = document.createElement("div");
     filterDiv.className = "mb-4";
     filterDiv.innerHTML = `
-      <label for="fechaFiltro" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins'] flex items-center gap-2">
-        <i class="fas fa-calendar-check mr-2 text-yellow-400"></i>Filtrar Turnos por Fecha:
-      </label>
+      <label for="fechaFiltro" class="block text-sm font-medium mb-2 text-gray-200 font-['Poppins']"><i class="fas fa-calendar-check mr-2 text-yellow-400"></i>Filtrar Turnos por Fecha:</label>
       <input type="date" id="fechaFiltro" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400">
     `;
     const modalContent = document.querySelector("#admin-modal .modal-content");
@@ -1330,11 +1136,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Vincular formulario de reserva
   const reservaForm = document.getElementById("reserva-form");
   if (reservaForm) {
     reservaForm.addEventListener("submit", reservarTurno);
   }
 
+  // Toggle menú móvil
   const menuToggle = document.querySelector(".menu-toggle");
   const mobileMenu = document.getElementById("mobile-menu");
   if (menuToggle && mobileMenu) {
@@ -1345,6 +1153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Cerrar menú móvil al hacer clic en un enlace
   document.querySelectorAll("#mobile-menu a").forEach((link) => {
     link.addEventListener("click", () => {
       mobileMenu.classList.add("hidden");
