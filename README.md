@@ -16,3 +16,4 @@ Barbería MBS es una plataforma web diseñada para gestionar turnos y servicios 
 - HTML
 - CSS
 - JavaScript
+- Firebase
